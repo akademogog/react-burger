@@ -1,0 +1,44 @@
+.ingridientCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+
+  &:hover img {
+    transform: scale(1.1);
+  }
+}
+
+.ingridientCounter {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #4C4CFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.ingridientImage {
+  margin: 0 auto;
+  transition: 0.3s linear;
+}
+
+.ingridientPrice {
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ingridientName {
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}

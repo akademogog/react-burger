@@ -1,0 +1,32 @@
+.myModal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: none;
+  background-color: rgba(#000000, 0.6);
+  backdrop-filter: blur(5px);
+  z-index: 999;
+
+  &Content {
+    background-color: #1c1c21;
+    border-radius: 40px;
+    position: relative;
+  }
+
+  &.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.closeButton {
+  position: absolute;
+  right: 43px;
+  top: 63px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
