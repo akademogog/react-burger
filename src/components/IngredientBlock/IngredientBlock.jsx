@@ -1,7 +1,7 @@
 import React from "react";
-import styles from "./IngridientBlock.module.scss";
+import styles from "./IngredientBlock.module.scss";
 
-const IngridientBlock = React.forwardRef(
+const IngredientBlock = React.forwardRef(
   ({ children, uniqType, ...props }, ref) => {
     return (
       <div className="mb-10" ref={ref}>
@@ -12,4 +12,4 @@ const IngridientBlock = React.forwardRef(
   }
 );
 
-export default IngridientBlock;
+export default IngredientBlock;

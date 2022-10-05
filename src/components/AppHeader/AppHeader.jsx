@@ -6,7 +6,7 @@ import styles from './AppHeader.module.scss'
 const AppHeader = () => {
   return (
     <header className={`${styles.header}`}>
-      <div className={`${styles.headerContainer} container`}>
+      <div className={`${styles.headerContainer} ${styles.container}`}>
         <div className={`${styles.headerBlockLeft}`}>
           <IconButton text={'Конструктор'} active={true}>
             <BurgerIcon type="primary" />

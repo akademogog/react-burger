@@ -4,36 +4,54 @@ import {
   CurrencyIcon,
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import React, { useState, useEffect, useRef } from "react";
-import PropTypes from 'prop-types';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
+import PropTypes from "prop-types";
 import styles from "./BurgerConstructor.module.scss";
 import SimpleBar from "simplebar-react";
 import MyModal from "../UI/MyModal/MyModal";
 import OrderAccepted from "../ModalsContent/OrderAccepted/OrderAccepted";
 
-const BurgerConstructor = ({ ingridientCards }) => {
-  const [bun, setBun] = useState(ingridientCards[0]);
+const BurgerConstructor = ({ ingredientCards }) => {
+  const [bun, setBun] = useState({});
   const [heightTopScrollBlock, setHeightTopScrollBlock] = useState(0);
   const [visibleModal, setVisibleModal] = useState(false);
+  
   const scrollableNodeRef = useRef();
 
-  const getCurrentOffsetIngridientBlock = () => {
+  useMemo(() => {
+    setBun(ingredientCards[0]);
+  }, [ingredientCards]);
+
+  // Расчитываем и устанавливаем текущую высоту блока ингридиентов
+  const getCurrentOffsetIngredientBlock = () => {
     const windowInnerHeight = window.innerHeight;
-    const offsetTopScrollBlock = scrollableNodeRef.current.getBoundingClientRect().top;
-    setHeightTopScrollBlock(Math.floor((windowInnerHeight - offsetTopScrollBlock - 252) / 96) * 96 - 16);
+    const offsetTopScrollBlock =
+      scrollableNodeRef.current.getBoundingClientRect().top;
+    setHeightTopScrollBlock(
+      Math.floor((windowInnerHeight - offsetTopScrollBlock - 252) / 96) * 96 -
+        16
+    );
   };
 
-  window.addEventListener('resize', function() {
-    getCurrentOffsetIngridientBlock();
-  }, true);
+  // Вызываем функцию при ресайзе
+  const resizeIngredientBlock = useCallback(() => {
+    getCurrentOffsetIngredientBlock();
+  }, []);  
 
   useEffect(() => {
-    getCurrentOffsetIngridientBlock();
+    getCurrentOffsetIngredientBlock();
+    window.addEventListener("resize", resizeIngredientBlock, true);
   }, []);
 
   return (
     <div className={`${styles.burgerConstructor} ml-10`}>
-      <div className="constructorList">
+      <div className={`${styles.constructorList} constructorList`}>
         <div className={`${styles.constructorBudTop}`}>
           <div className={`mb-4`}>
             <ConstructorElement
@@ -53,10 +71,13 @@ const BurgerConstructor = ({ ingridientCards }) => {
             autoHide={false}
             scrollableNodeProps={{ ref: scrollableNodeRef }}
           >
-            {ingridientCards.map(
+            {ingredientCards.map(
               (card) =>
                 card.constructor === true && (
-                  <div key={card._id} className={`${styles.constructorDragableElement} mb-4`}>
+                  <div
+                    key={card._id}
+                    className={`${styles.constructorDragableElement} mb-4`}
+                  >
                     <DragIcon type="primary" />
                     <ConstructorElement
                       text={card.name}
@@ -82,24 +103,44 @@ const BurgerConstructor = ({ ingridientCards }) => {
         <div className={`${styles.constructorSumm} mt-10`}>
           <div className={`${styles.constructorSummText} mr-10`}>
             <span className="text text_type_main-large mr-2">610</span>
-            <CurrencyIcon type="primary"/>
+            <CurrencyIcon type="primary" />
           </div>
-          <Button type="primary" size="large" onClick={() => {
-            setVisibleModal(true);
-          }}>
+          <Button
+            type="primary"
+            size="large"
+            onClick={() => {
+              setVisibleModal(true);
+            }}
+            htmlType='button'
+          >
             Оформить заказ
           </Button>
         </div>
         <MyModal visible={visibleModal} setVisible={setVisibleModal}>
-          <OrderAccepted/>
+          <OrderAccepted />
         </MyModal>
       </div>
     </div>
   );
 };
 
+const ingredientCardPropTypes = PropTypes.shape({
+  _id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+  proteins: PropTypes.number.isRequired,
+  fat: PropTypes.number.isRequired,
+  carbohydrates: PropTypes.number.isRequired,
+  calories: PropTypes.number.isRequired,
+  price: PropTypes.number.isRequired,
+  image: PropTypes.string.isRequired,
+  image_mobile: PropTypes.string.isRequired,
+  image_large: PropTypes.string.isRequired,
+  __v: PropTypes.number,
+});
+
 BurgerConstructor.propTypes = {
-  ingridientCards: PropTypes.object.isRequired
-}
+  ingredientCards: PropTypes.arrayOf(ingredientCardPropTypes).isRequired
+};
 
 export default BurgerConstructor;

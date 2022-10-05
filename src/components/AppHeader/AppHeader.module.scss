@@ -10,6 +10,13 @@
   align-items: center;
 }
 
+.container {
+  width: 100%;
+  margin: 0 auto;
+  max-width: 1320px;
+  padding: 0 20px;
+}
+
 .headerBlockLeft {
   width: calc(100% / 3);
   display: flex;

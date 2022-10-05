@@ -2,7 +2,6 @@ import React from "react";
 import iconButtonStyles from "./IconButton.module.scss";
 
 const IconButton = ({ children, text, active = false, ...props }) => {
-  console.log(iconButtonStyles);
   return (
     <button {...props} className={iconButtonStyles.iconButton}>
       {children}
