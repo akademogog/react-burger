@@ -1,5 +1,6 @@
 import React from "react";
 import iconButtonStyles from "./IconButton.module.scss";
+import PropTypes from "prop-types";
 
 const IconButton = ({ children, text, active = false, ...props }) => {
   return (
@@ -14,6 +15,13 @@ const IconButton = ({ children, text, active = false, ...props }) => {
       </span>
     </button>
   );
+};
+
+IconButton.propTypes = {
+  children: PropTypes .element,
+  text: PropTypes.string,
+  active: PropTypes.bool,
+  props: PropTypes.array
 };
 
 export default IconButton;

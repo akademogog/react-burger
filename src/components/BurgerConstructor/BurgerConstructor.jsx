@@ -15,7 +15,7 @@ import PropTypes from "prop-types";
 import styles from "./BurgerConstructor.module.scss";
 import SimpleBar from "simplebar-react";
 import MyModal from "../UI/MyModal/MyModal";
-import OrderAccepted from "../ModalsContent/OrderAccepted/OrderAccepted";
+import OrderDetails from "../ModalsContent/OrderDetails/OrderDetails";
 
 const BurgerConstructor = ({ ingredientCards }) => {
   const [bun, setBun] = useState({});
@@ -33,10 +33,13 @@ const BurgerConstructor = ({ ingredientCards }) => {
     const windowInnerHeight = window.innerHeight;
     const offsetTopScrollBlock =
       scrollableNodeRef.current.getBoundingClientRect().top;
-    setHeightTopScrollBlock(
-      Math.floor((windowInnerHeight - offsetTopScrollBlock - 252) / 96) * 96 -
-        16
-    );
+    const maxBlockHeigth = Math.floor(windowInnerHeight - offsetTopScrollBlock - 252)
+    if (maxBlockHeigth < 104) {
+      setHeightTopScrollBlock(104);
+      return;
+    }
+  
+    setHeightTopScrollBlock(maxBlockHeigth);
   };
 
   // Вызываем функцию при ресайзе
@@ -73,7 +76,7 @@ const BurgerConstructor = ({ ingredientCards }) => {
           >
             {ingredientCards.map(
               (card) =>
-                card.constructor === true && (
+                card.type !== 'Булка' && (
                   <div
                     key={card._id}
                     className={`${styles.constructorDragableElement} mb-4`}
@@ -117,7 +120,7 @@ const BurgerConstructor = ({ ingredientCards }) => {
           </Button>
         </div>
         <MyModal visible={visibleModal} setVisible={setVisibleModal}>
-          <OrderAccepted />
+          <OrderDetails />
         </MyModal>
       </div>
     </div>

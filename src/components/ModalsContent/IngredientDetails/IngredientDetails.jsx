@@ -1,8 +1,9 @@
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import React from 'react'
-import styles from './DetailIngredients.module.scss'
+import styles from './IngredientDetails.module.scss'
+import PropTypes from "prop-types";
 
-const DetailIngredients = ({closeModal, ingredientCard}) => {
+const IngredientDetails = ({closeModal, ingredientCard}) => {
   return (
     <div className={`${styles.ingredientModal}`}>
       <div className={`${styles.titleBlock}`}>
@@ -35,4 +36,24 @@ const DetailIngredients = ({closeModal, ingredientCard}) => {
   )
 }
 
-export default DetailIngredients
+const ingredientCardPropTypes = PropTypes.shape({
+  _id: PropTypes.string,
+  name: PropTypes.string,
+  type: PropTypes.string,
+  proteins: PropTypes.number,
+  fat: PropTypes.number,
+  carbohydrates: PropTypes.number,
+  calories: PropTypes.number,
+  price: PropTypes.number,
+  image: PropTypes.string,
+  image_mobile: PropTypes.string,
+  image_large: PropTypes.string,
+  __v: PropTypes.number,
+});
+
+IngredientDetails.propTypes = {
+  closeModal: PropTypes.func,
+  ingredientCard: ingredientCardPropTypes
+};
+
+export default IngredientDetails

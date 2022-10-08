@@ -1,7 +1,7 @@
 import React from 'react'
-import Done from '../../../img/done.svg'
-import styles from './OrderAccepted.module.scss'
-const OrderAccepted = () => {
+import Done from '../../../image/done.svg'
+import styles from './OrderDetails.module.scss'
+const OrderDetails = () => {
   return (
     <div className={`${styles.orderAcceptedBlock}`}>
       <h2 className="text text_type_digits-large mb-8">034536</h2>
@@ -13,4 +13,4 @@ const OrderAccepted = () => {
   )
 }
 
-export default OrderAccepted
+export default OrderDetails

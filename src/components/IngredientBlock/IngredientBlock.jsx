@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./IngredientBlock.module.scss";
+import PropTypes from "prop-types";
 
 const IngredientBlock = React.forwardRef(
   ({ children, uniqType, ...props }, ref) => {
@@ -11,5 +12,13 @@ const IngredientBlock = React.forwardRef(
     );
   }
 );
+
+IngredientBlock.propTypes = {
+  children: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.object,
+  ])),
+  uniqType: PropTypes.string
+};
 
 export default IngredientBlock;

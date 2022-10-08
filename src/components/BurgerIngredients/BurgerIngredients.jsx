@@ -7,7 +7,7 @@ import IngredientCard from "../UI/IngredientCard/IngredientCard.jsx";
 import IngredientBlock from "../IngredientBlock/IngredientBlock.jsx";
 import styles from "./BurgerIngredients.module.scss";
 import MyModal from "../UI/MyModal/MyModal";
-import DetailIngredients from "../ModalsContent/DetailIngredients/DetailIngredients.jsx";
+import IngredientDetails from "../ModalsContent/IngredientDetails/IngredientDetails.jsx";
 
 const BurgerIngredients = ({ ingredientCards }) => {
   const returnType = ingredientCards.map(
@@ -25,12 +25,11 @@ const BurgerIngredients = ({ ingredientCards }) => {
   });
 
   const scrollableNodeRef = useRef();
-  const tabBloks = useRef();
   const ingredientBlockRef = useRef([]);
 
   useMemo(() => {
     ingredientBlockRef.current = [];
-  }, [ingredientCards]) 
+  }, [ingredientCards]);
 
   const addToBlockRefs = (el) => {
     if (el && !ingredientBlockRef.current.includes(el)) {
@@ -48,51 +47,41 @@ const BurgerIngredients = ({ ingredientCards }) => {
   };
 
   // устанавливает высоту блока ингридиентов
-  const getCurrentOffsetIngredientBlock = (currentScrolableRef) => {
+  const getCurrentOffsetIngredientBlock = () => {
+    const currentScrolableRef = scrollableNodeRef.current;
     setOffsetTopScrollBlock(currentScrolableRef.getBoundingClientRect().top);
   };
 
-  // скрол к блокам ингридиента при нажатии на табы
-  const scrollToIngredient = (currentScrolableRef) => {
-    setNavChange({ ...navChange, currentEvent: "clicked" });
-    // setCurrentEvent("clicked");
-    const currentTypeIndex = uniqTypes.indexOf(navChange.clickedBlock);
-    const currentIngredientBlock = ingredientBlockRef.current[currentTypeIndex];
-    const offsetTopCurrentIngredientBlock = currentIngredientBlock.offsetTop;
-    currentScrolableRef.scrollTo({
-      top: offsetTopCurrentIngredientBlock,
-      behavior: "smooth",
+  const eventListenerFunction = () => {
+    const currentHeightIngredient =
+      scrollableNodeRef.current.children[0].offsetHeight;
+    const currentHeightScrollBlock = scrollableNodeRef.current.offsetHeight;
+    const curentScrollTop = scrollableNodeRef.current.scrollTop;
+
+    ingredientBlockRef.current.find((e, index) => {
+      if (curentScrollTop >= e.offsetTop) {
+        return setNavChange({
+          ...navChange,
+          scrolledBlock: uniqTypes[index],
+        });
+      }
+
+      if (
+        currentHeightIngredient ===
+        curentScrollTop + currentHeightScrollBlock
+      ) {
+        return setNavChange({
+          ...navChange,
+          scrolledBlock: uniqTypes[uniqTypes.length - 1],
+        });
+      }
     });
   };
 
-  // скрол к блокам ингридиента при сколле
+  // Активация табов при сколле
   const onScrollIngredients = () => {
     setNavChange({ ...navChange, currentEvent: "scrolled" });
-    scrollableNodeRef.current.addEventListener("scroll", () => {
-      const currentHeightIngredient =
-        scrollableNodeRef.current.children[0].offsetHeight;
-      const currentHeightScrollBlock = scrollableNodeRef.current.offsetHeight;
-      const curentScrollTop = scrollableNodeRef.current.scrollTop;
-
-      ingredientBlockRef.current.find((e, index) => {
-        if (curentScrollTop >= e.offsetTop) {
-          return setNavChange({
-            ...navChange,
-            scrolledBlock: uniqTypes[index],
-          });
-        }
-
-        if (
-          currentHeightIngredient ===
-          curentScrollTop + currentHeightScrollBlock
-        ) {
-          return setNavChange({
-            ...navChange,
-            scrolledBlock: uniqTypes[uniqTypes.length - 1],
-          });
-        }
-      });
-    });
+    scrollableNodeRef.current.addEventListener("scroll", eventListenerFunction);
   };
 
   // Меняем активный таб при скролле
@@ -104,15 +93,28 @@ const BurgerIngredients = ({ ingredientCards }) => {
 
   // Меняем активный таб при клике
   const changeActiveTabClicked = (e) => {
-    setNavChange({ ...navChange, clickedBlock: e });
+    scrollableNodeRef.current.removeEventListener("scroll", eventListenerFunction);
+    setNavChange({ ...navChange, clickedBlock: e, currentEvent: "clicked"});
+  };
+
+  // скрол к блокам ингридиента при нажатии на табы
+  const scrollToIngredient = () => {
+    const currentScrolableRef = scrollableNodeRef.current;
+    const currentTypeIndex = uniqTypes.indexOf(navChange.clickedBlock);
+    const currentIngredientBlock = ingredientBlockRef.current[currentTypeIndex];
+    const offsetTopCurrentIngredientBlock = currentIngredientBlock.offsetTop;
+
+    currentScrolableRef.scrollTo({
+      top: offsetTopCurrentIngredientBlock,
+      behavior: "smooth",
+    });
   };
 
   useEffect(() => {
-    const currentScrolableRef = scrollableNodeRef.current;
-    getCurrentOffsetIngredientBlock(currentScrolableRef);
-    scrollToIngredient(currentScrolableRef);
+    getCurrentOffsetIngredientBlock();
+    scrollToIngredient();
     onScrollIngredients();
-  }, [navChange.clickedBlock, navChange.currentEvent]);
+  }, [navChange.currentEvent]);
 
   useEffect(() => {
     changeActiveTabScrolled();
@@ -121,7 +123,7 @@ const BurgerIngredients = ({ ingredientCards }) => {
   return (
     <>
       <div className={`${styles.burgerIngredients} mt-5`}>
-        <div style={{ display: "flex" }} className="mb-10" ref={tabBloks}>
+        <div style={{ display: "flex" }} className="mb-10">
           {uniqTypes.map((uniqType, index) => (
             <Tab
               value={uniqType}
@@ -131,7 +133,9 @@ const BurgerIngredients = ({ ingredientCards }) => {
                 (navChange.scrolledBlock === uniqType &&
                   navChange.currentEvent === "scrolled")
               }
-              onClick={changeActiveTabClicked}
+              onClick={
+                changeActiveTabClicked
+              }
               key={uniqType}
             >
               {uniqType}
@@ -170,7 +174,7 @@ const BurgerIngredients = ({ ingredientCards }) => {
         setVisible={setVisibleModal}
         hideDefaultClose={true}
       >
-        <DetailIngredients
+        <IngredientDetails
           ingredientCard={modalProps}
           closeModal={closeModal}
         />
