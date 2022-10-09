@@ -14,8 +14,8 @@ import React, {
 import PropTypes from "prop-types";
 import styles from "./BurgerConstructor.module.scss";
 import SimpleBar from "simplebar-react";
-import MyModal from "../UI/MyModal/MyModal";
-import OrderDetails from "../ModalsContent/OrderDetails/OrderDetails";
+import MyModal from "../MyModal/MyModal";
+import OrderDetails from "../OrderDetails/OrderDetails";
 
 const BurgerConstructor = ({ ingredientCards }) => {
   const [bun, setBun] = useState({});

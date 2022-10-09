@@ -3,11 +3,11 @@ import PropTypes from "prop-types";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
-import IngredientCard from "../UI/IngredientCard/IngredientCard.jsx";
+import IngredientCard from "../IngredientCard/IngredientCard.jsx";
 import IngredientBlock from "../IngredientBlock/IngredientBlock.jsx";
 import styles from "./BurgerIngredients.module.scss";
-import MyModal from "../UI/MyModal/MyModal";
-import IngredientDetails from "../ModalsContent/IngredientDetails/IngredientDetails.jsx";
+import MyModal from "../MyModal/MyModal";
+import IngredientDetails from "../IngredientDetails/IngredientDetails.jsx";
 
 const BurgerIngredients = ({ ingredientCards }) => {
   const returnType = ingredientCards.map(
