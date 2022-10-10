@@ -1,0 +1,30 @@
+.iconButton {
+  cursor: pointer;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  padding: 17px 20px;
+  margin: 0;
+  color: #F2F2F3;
+  transition: 0.3s linear;
+  border-radius: 40px;
+
+  svg {
+    transition: 0.3s linear;
+  }
+
+  span {
+    margin-left: 8px;
+    white-space: nowrap;
+  }
+
+  &:hover {
+    color: #8585AD;
+
+    svg {
+      fill: #8585AD;
+    }
+  }
+}

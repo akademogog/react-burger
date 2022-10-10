@@ -1,0 +1,39 @@
+.header {
+  background-color: #1c1c21;
+  display: flex;
+  align-items: center;
+  padding: 16px 0;
+}
+
+.headerContainer {
+  display: flex;
+  align-items: center;
+}
+
+.container {
+  width: 100%;
+  margin: 0 auto;
+  max-width: 1320px;
+  padding: 0 20px;
+}
+
+.headerBlockLeft {
+  width: calc(100% / 3);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.headerBlockCenter {
+  width: calc(100% / 3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.headerBlockRight {
+  width: calc(100% / 3);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
