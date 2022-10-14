@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
-import PropTypes from "prop-types";
+import React, { useState, useRef, useEffect, useMemo, useContext } from "react";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
@@ -8,9 +7,12 @@ import IngredientBlock from "../IngredientBlock/IngredientBlock.jsx";
 import styles from "./BurgerIngredients.module.scss";
 import MyModal from "../MyModal/MyModal";
 import IngredientDetails from "../IngredientDetails/IngredientDetails.jsx";
+import IngredientContext from "../../context/ingredientsContext.js";
 
-const BurgerIngredients = ({ ingredientCards }) => {
-  const returnType = ingredientCards.map(
+const BurgerIngredients = () => {
+  const [ ingredientCards ] = useContext(IngredientContext);
+
+  const returnType = ingredientCards.ingredients.map(
     (ingredientCard) => ingredientCard.type
   );
   const uniqTypes = [...new Set(returnType)];
@@ -29,7 +31,7 @@ const BurgerIngredients = ({ ingredientCards }) => {
 
   useMemo(() => {
     ingredientBlockRef.current = [];
-  }, [ingredientCards]);
+  }, [ingredientCards.ingredients]);
 
   const addToBlockRefs = (el) => {
     if (el && !ingredientBlockRef.current.includes(el)) {
@@ -93,8 +95,11 @@ const BurgerIngredients = ({ ingredientCards }) => {
 
   // Меняем активный таб при клике
   const changeActiveTabClicked = (e) => {
-    scrollableNodeRef.current.removeEventListener("scroll", eventListenerFunction);
-    setNavChange({ ...navChange, clickedBlock: e, currentEvent: "clicked"});
+    scrollableNodeRef.current.removeEventListener(
+      "scroll",
+      eventListenerFunction
+    );
+    setNavChange({ ...navChange, clickedBlock: e, currentEvent: "clicked" });
   };
 
   // скрол к блокам ингридиента при нажатии на табы
@@ -133,9 +138,7 @@ const BurgerIngredients = ({ ingredientCards }) => {
                 (navChange.scrolledBlock === uniqType &&
                   navChange.currentEvent === "scrolled")
               }
-              onClick={
-                changeActiveTabClicked
-              }
+              onClick={changeActiveTabClicked}
               key={uniqType}
             >
               {uniqType}
@@ -155,7 +158,7 @@ const BurgerIngredients = ({ ingredientCards }) => {
               uniqType={uniqType}
               ref={addToBlockRefs}
             >
-              {ingredientCards.map(
+              {ingredientCards.ingredients.map(
                 (ingredientCard) =>
                   ingredientCard.type === uniqType && (
                     <IngredientCard
@@ -181,25 +184,6 @@ const BurgerIngredients = ({ ingredientCards }) => {
       </MyModal>
     </>
   );
-};
-
-const ingredientCardPropTypes = PropTypes.shape({
-  _id: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
-  proteins: PropTypes.number.isRequired,
-  fat: PropTypes.number.isRequired,
-  carbohydrates: PropTypes.number.isRequired,
-  calories: PropTypes.number.isRequired,
-  price: PropTypes.number.isRequired,
-  image: PropTypes.string.isRequired,
-  image_mobile: PropTypes.string.isRequired,
-  image_large: PropTypes.string.isRequired,
-  __v: PropTypes.number,
-});
-
-BurgerIngredients.propTypes = {
-  ingredientCards: PropTypes.arrayOf(ingredientCardPropTypes).isRequired,
 };
 
 export default BurgerIngredients;

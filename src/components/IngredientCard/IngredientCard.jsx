@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 
 const IngredientCard = ({ ingredientCard, openModal }) => {
   return (
-    <div className={styles.ingredientCard} onClick={() => openModal(ingredientCard)}>
+    <div className={styles.ingredientCard} onClick={() => {openModal(ingredientCard)}}>
       <div className={`${styles.ingredientCounter} text text_type_digits-default`}>
         <span>1</span>
       </div>
