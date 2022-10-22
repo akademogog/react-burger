@@ -1,11 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import Done from "../../image/done.svg";
 import styles from "./OrderDetails.module.scss";
-import IngredientContext from "../../context/ingredientsContext.js";
-import PropTypes from 'prop-types'
+import { useSelector } from "react-redux";
 
-const OrderDetails = ({number}) => {
-  const [ ingredientCards ] = useContext(IngredientContext);
+const OrderDetails = () => {
+  const { number } = useSelector((store) => store.order);
 
   return (
     <div className={`${styles.orderAcceptedBlock}`}>
@@ -20,10 +19,6 @@ const OrderDetails = ({number}) => {
       </p>
     </div>
   );
-};
-
-OrderDetails.propTypes = {
-  number: PropTypes.number
 };
 
 export default OrderDetails;

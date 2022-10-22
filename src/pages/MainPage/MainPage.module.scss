@@ -6,3 +6,16 @@
   height: calc(100vh - 90px);
   overflow: hidden;
 }
+
+.secondContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.errorH1 {
+  text-align: center;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 40px;
+}

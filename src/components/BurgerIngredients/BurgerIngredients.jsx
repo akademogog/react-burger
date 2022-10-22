@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect, useMemo, useContext } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
@@ -7,18 +8,15 @@ import IngredientBlock from "../IngredientBlock/IngredientBlock.jsx";
 import styles from "./BurgerIngredients.module.scss";
 import MyModal from "../MyModal/MyModal";
 import IngredientDetails from "../IngredientDetails/IngredientDetails.jsx";
-import IngredientContext from "../../context/ingredientsContext.js";
 
 const BurgerIngredients = () => {
-  const [ ingredientCards ] = useContext(IngredientContext);
+  const { ingredients } = useSelector((store) => store);
+  const dispatch = useDispatch();
 
-  const returnType = ingredientCards.ingredients.map(
-    (ingredientCard) => ingredientCard.type
-  );
+  const returnType = ingredients.map((ingredientCard) => ingredientCard.type);
   const uniqTypes = [...new Set(returnType)];
 
   const [visibleModal, setVisibleModal] = useState(false);
-  const [modalProps, setModalProps] = useState({});
   const [offsetTopScrollBlock, setOffsetTopScrollBlock] = useState(0);
   const [navChange, setNavChange] = useState({
     clickedBlock: uniqTypes[0],
@@ -31,7 +29,7 @@ const BurgerIngredients = () => {
 
   useMemo(() => {
     ingredientBlockRef.current = [];
-  }, [ingredientCards.ingredients]);
+  }, [ingredients]);
 
   const addToBlockRefs = (el) => {
     if (el && !ingredientBlockRef.current.includes(el)) {
@@ -39,8 +37,8 @@ const BurgerIngredients = () => {
     }
   };
 
-  const openModal = (ingredientCard) => {
-    setModalProps(ingredientCard);
+  const openModal = (ingredient) => {
+    dispatch({ type: "SET_CURRENT_INGREDIENT", ingredient });
     setVisibleModal(true);
   };
 
@@ -158,7 +156,7 @@ const BurgerIngredients = () => {
               uniqType={uniqType}
               ref={addToBlockRefs}
             >
-              {ingredientCards.ingredients.map(
+              {ingredients.map(
                 (ingredientCard) =>
                   ingredientCard.type === uniqType && (
                     <IngredientCard
@@ -177,10 +175,7 @@ const BurgerIngredients = () => {
         setVisible={setVisibleModal}
         hideDefaultClose={true}
       >
-        <IngredientDetails
-          ingredientCard={modalProps}
-          closeModal={closeModal}
-        />
+        <IngredientDetails closeModal={closeModal} />
       </MyModal>
     </>
   );

@@ -2,11 +2,27 @@ import React from "react";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./IngredientCard.module.scss";
 import PropTypes from "prop-types";
+import { useDrag } from "react-dnd";
 
 const IngredientCard = ({ ingredientCard, openModal }) => {
+  const [, dragRef] = useDrag({
+    type: "card",
+    item: ingredientCard,
+  });
+
+  const onIngredientClick = () => {
+    openModal(ingredientCard);
+  };
+
   return (
-    <div className={styles.ingredientCard} onClick={() => {openModal(ingredientCard)}}>
-      <div className={`${styles.ingredientCounter} text text_type_digits-default`}>
+    <div
+      ref={dragRef}
+      className={styles.ingredientCard}
+      onClick={onIngredientClick}
+    >
+      <div
+        className={`${styles.ingredientCounter} text text_type_digits-default`}
+      >
         <span>1</span>
       </div>
       <img
@@ -46,7 +62,7 @@ const ingredientCardPropTypes = PropTypes.shape({
 
 IngredientCard.propTypes = {
   ingredientCard: ingredientCardPropTypes,
-  openModal: PropTypes.func
+  openModal: PropTypes.func,
 };
 
 export default IngredientCard;

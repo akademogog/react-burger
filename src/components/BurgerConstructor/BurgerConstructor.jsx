@@ -1,106 +1,87 @@
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { ORDERS_URL } from "../../utils/constants";
+import { useDrop, useDrag } from "react-dnd";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Button,
   ConstructorElement,
   CurrencyIcon,
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useMemo,
-  useCallback,
-  useContext,
-} from "react";
 import styles from "./BurgerConstructor.module.scss";
 import SimpleBar from "simplebar-react";
 import MyModal from "../MyModal/MyModal";
 import OrderDetails from "../OrderDetails/OrderDetails";
-import IngredientContext from "../../context/ingredientsContext.js";
 import submitOrder from "../../utils/submitOrder.js";
-const INGREDIENTS_URL = "https://norma.nomoreparties.space/api/orders";
+import ConstructorDraggableIngredient from "../ConstructorDraggableIngredient/ConstructorDraggableIngredient";
+import { v4 as uuidv4 } from 'uuid';
 
 const BurgerConstructor = () => {
-  const [ingredientCards] = useContext(IngredientContext);
-  const [selectedIngredients, setSelectedIngredients] = useState([]);
+  const {
+    constructorIngredients,
+    constructorBun,
+    totalConstructorPrice,
+    order,
+  } = useSelector((store) => store);
 
-  const [curentBun, setCurentBun] = useState({});
-  const [totalSumm, setTotalSumm] = useState(0);
   const [heightTopScrollBlock, setHeightTopScrollBlock] = useState(0);
   const [visibleModal, setVisibleModal] = useState(false);
-  const [order, setOrder] = useState({ name: null, number: null });
 
+  // useEffect(()=> {
+  //   console.log(constructorIngredients);
+  // }, [constructorIngredients])
+
+  const dispatch = useDispatch();
   const scrollableNodeRef = useRef();
 
-  useMemo(() => {
-    setSelectedIngredients(ingredientCards.ingredients);
-  }, [ingredientCards.ingredients]);
+  const [, dropTarget] = useDrop({
+    accept: "card",
+    drop(ingredient) {
+      if (ingredient["type"] === "Булка") {
+        dispatch({ type: "SET_CONSTRUCTOR_BUN", ingredient });
+      } else {
+        dispatch({
+          type: "SET_CONSTRUCTOR_INGREDIENTS",
+          ingredient: {
+            ...ingredient,
+            dragId: uuidv4(),
+          },
+        });
+      }
+    },
+  });
 
   useEffect(() => {
-    calculateSumm();
-  }, [selectedIngredients]);
+    dispatch({ type: "SET_CONSTRUCTOR_PRICE" });
+    dispatch({ type: "SET_ORDER" });
+  }, [constructorBun, constructorIngredients]);
 
   useEffect(() => {
-    setBud();
-    getCurrentOffsetIngredientBlock();
+    if (constructorIngredients.length) {
+      getCurrentOffsetIngredientBlock();
+    }
+  }, [constructorIngredients]);
+
+  useEffect(() => {
     window.addEventListener("resize", resizeIngredientBlock, true);
   }, []);
 
-  // Переносим ингредиенты в локальный стейт для более удобной работы с ними и устанавливаем булку в конструктор
-  const setBud = () => {
-    let isSetBun = false;
-    const currentSelected = selectedIngredients.filter((ingredient) => {
-      if (ingredient["type"] === "Булка") {
-        if (!isSetBun) {
-          isSetBun = true;
-          setCurentBun(ingredient);
-          return ingredient;
-        }
-        return;
-      }
-      return ingredient;
-    });
-    setSelectedIngredients(currentSelected);
-  };
-
-  // Вычисляем итоговую сумму
-  const calculateSumm = () => {
-    let thisTotalSumm = 0;
-    for (const key in selectedIngredients) {
-      const element = selectedIngredients[key];
-      if (element.type === "Булка") {
-        thisTotalSumm += element.price * 2;
-      } else {
-        thisTotalSumm += element.price;
-      }
-    }
-    setTotalSumm(thisTotalSumm);
-  };
-
   // Отправляем заказ
-  const sendOrder = async () => {
-    const currentIngredentID = selectedIngredients.map(
-      (ingredient) => ingredient["_id"]
-    );
-    submitOrder(INGREDIENTS_URL, currentIngredentID).then((result) => {
+  const sendOrder = () => {
+    submitOrder(ORDERS_URL, order.orderIngredentID).then((result) => {
       if (result.success) {
-        setOrder({
-          name: result.name,
+        dispatch({
+          type: "SET_ORDER",
           number: result.order.number,
+          name: result.name,
         });
       }
     });
   };
 
   // Удаляем эллемент из конструктора
-  const handleClose = (curentId) => {
-    const currentSelected = selectedIngredients.filter((ingredient) => {
-      if (ingredient["_id"] === curentId) {
-        return;
-      }
-      return ingredient;
-    });
-    setSelectedIngredients(currentSelected);
+  const handleClose = (curentIndex) => {
+    dispatch({ type: "DEL_CONSTRUCTOR_INGREDIENTS", curentIndex });
   };
 
   // Расчитываем и устанавливаем текущую высоту блока ингридиентов
@@ -124,61 +105,110 @@ const BurgerConstructor = () => {
     getCurrentOffsetIngredientBlock();
   }, []);
 
+  const moveCard = useCallback(
+    (dragIndex, hoverIndex) => {
+      const dragCard = constructorIngredients[dragIndex];
+      const newCards = [...constructorIngredients];
+      newCards.splice(dragIndex, 1);
+      newCards.splice(hoverIndex, 0, dragCard);
+      dispatch({
+        type: "UPDATE_CONSTRUCTOR_INGREDIENTS",
+        ingredients: newCards,
+      });
+    },
+    [constructorIngredients, dispatch]
+  );
+
   return (
     <div className={`${styles.burgerConstructor} ml-10`}>
-      <div className={`${styles.constructorList} constructorList`}>
+      <div
+        className={`${styles.constructorList} constructorList`}
+        ref={dropTarget}
+      >
         <div className={`${styles.constructorBudTop}`}>
           <div className={`mb-4`}>
-            <ConstructorElement
-              type="top"
-              isLocked={true}
-              text={`${curentBun.name} - верх`}
-              price={curentBun.price}
-              thumbnail={curentBun.image}
-            />
+            {constructorBun ? (
+              <ConstructorElement
+                type="top"
+                isLocked={true}
+                text={`${constructorBun["name"]} - верх`}
+                price={constructorBun["price"]}
+                thumbnail={constructorBun["image"]}
+              />
+            ) : (
+              <div className="constructor-element constructor-element_pos_top">
+                <span
+                  className={`constructor-element__text ${styles.constructorElementTextPreview}`}
+                >
+                  Перенесите сюда булку
+                </span>
+              </div>
+            )}
           </div>
         </div>
-        <div className={`${styles.constructorMain}`}>
-          <SimpleBar
-            style={{
-              maxHeight: `${heightTopScrollBlock}px`,
-            }}
-            autoHide={false}
-            scrollableNodeProps={{ ref: scrollableNodeRef }}
-          >
-            {selectedIngredients.map(
-              (card) =>
-                card.type !== "Булка" && (
-                  <div
-                    key={card._id}
-                    className={`${styles.constructorDragableElement} mb-4`}
-                  >
-                    <DragIcon type="primary" />
-                    <ConstructorElement
-                      text={card.name}
-                      price={card.price}
-                      thumbnail={card.image}
-                      handleClose={() => handleClose(card._id)}
+        <div
+          className={`${
+            !constructorIngredients.length && styles.constructorMain
+          }`}
+        >
+          {constructorIngredients.length ? (
+            <SimpleBar
+              style={{
+                maxHeight: `${heightTopScrollBlock}px`,
+              }}
+              autoHide={false}
+              scrollableNodeProps={{ ref: scrollableNodeRef }}
+            >
+              {constructorIngredients.map(
+                (card, index) =>
+                  card.type !== "Булка" && (
+                    <ConstructorDraggableIngredient
+                      key={card.dragId}
+                      item={card}
+                      index={index}
+                      handleClose={handleClose}
+                      moveCard={moveCard}
                     />
-                  </div>
-                )
-            )}
-          </SimpleBar>
+                  )
+              )}
+            </SimpleBar>
+          ) : (
+            <div className={`constructor-element ${styles.constructorElement}`}>
+              <span
+                className={`constructor-element__text ${styles.constructorElementTextPreview}`}
+              >
+                А сюда перетяните ингредиенты
+              </span>
+            </div>
+          )}
         </div>
         <div className={`${styles.constructorBudBottom}`}>
           <div className="mt-4">
-            <ConstructorElement
-              type="bottom"
-              isLocked={true}
-              text={`${curentBun.name} - низ`}
-              price={curentBun.price}
-              thumbnail={curentBun.image}
-            />
+            {constructorBun ? (
+              <ConstructorElement
+                type="bottom"
+                isLocked={true}
+                text={`${constructorBun["name"]} - низ`}
+                price={constructorBun["price"]}
+                thumbnail={constructorBun["image"]}
+              />
+            ) : (
+              <div className="constructor-element constructor-element_pos_bottom mt-4">
+                <span
+                  className={`constructor-element__text ${styles.constructorElementTextPreview}`}
+                >
+                  {"Или сюда :)"}
+                </span>
+              </div>
+            )}
           </div>
         </div>
+
         <div className={`${styles.constructorSumm} mt-10`}>
           <div className={`${styles.constructorSummText} mr-10`}>
-            <span className="text text_type_main-large mr-2">{totalSumm}</span>
+            <span className="text text_type_main-large mr-2">
+              {totalConstructorPrice}
+            </span>
             <CurrencyIcon type="primary" />
           </div>
           <Button
