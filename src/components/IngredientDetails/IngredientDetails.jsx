@@ -6,7 +6,7 @@ import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
 
 const IngredientDetails = ({ closeModal }) => {
-  const { currentIngredient } = useSelector((store) => store);
+  const { currentIngredient } = useSelector((store) => store.modalIngredientReduser);
 
   return (
     currentIngredient &&

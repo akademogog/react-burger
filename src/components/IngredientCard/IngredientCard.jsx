@@ -19,12 +19,14 @@ const IngredientCard = ({ ingredientCard, openModal }) => {
       ref={dragRef}
       className={styles.ingredientCard}
       onClick={onIngredientClick}
-    >
+    >{ingredientCard.__v !== 0 && (
       <div
         className={`${styles.ingredientCounter} text text_type_digits-default`}
       >
-        <span>1</span>
+        <span>{ingredientCard.__v}</span>
+        
       </div>
+      )}
       <img
         src={ingredientCard.image}
         alt=""

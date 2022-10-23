@@ -10,7 +10,7 @@ import MyModal from "../MyModal/MyModal";
 import IngredientDetails from "../IngredientDetails/IngredientDetails.jsx";
 
 const BurgerIngredients = () => {
-  const { ingredients } = useSelector((store) => store);
+  const { ingredients } = useSelector((store) => store.burgerIngredientsReduser);
   const dispatch = useDispatch();
 
   const returnType = ingredients.map((ingredientCard) => ingredientCard.type);
@@ -170,13 +170,11 @@ const BurgerIngredients = () => {
           ))}
         </SimpleBar>
       </div>
-      <MyModal
-        visible={visibleModal}
-        setVisible={setVisibleModal}
-        hideDefaultClose={true}
-      >
-        <IngredientDetails closeModal={closeModal} />
-      </MyModal>
+      {visibleModal && (
+        <MyModal setVisible={setVisibleModal} hideDefaultClose={true}>
+          <IngredientDetails closeModal={closeModal} />
+        </MyModal>
+      )}
     </>
   );
 };

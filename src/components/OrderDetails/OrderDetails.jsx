@@ -4,8 +4,8 @@ import styles from "./OrderDetails.module.scss";
 import { useSelector } from "react-redux";
 
 const OrderDetails = () => {
-  const { number } = useSelector((store) => store.order);
-
+  const number = useSelector((store) => store.modalOrderReduser.number);
+  
   return (
     <div className={`${styles.orderAcceptedBlock}`}>
       <h2 className="text text_type_digits-large mb-8">{number}</h2>

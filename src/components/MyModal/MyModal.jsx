@@ -4,13 +4,9 @@ import styles from "./MyModal.module.scss";
 import ReactDOM from 'react-dom'
 import PropTypes from "prop-types";
 
-const MyModal = ({ children, visible, setVisible, hideDefaultClose }) => {
-  const rootClasses = [styles.myModal];
+const MyModal = ({ children, setVisible, hideDefaultClose }) => {
+  const rootClasses = [styles.myModal, styles.active];
   const modalRoot = document.getElementById("react-modals");
-
-  if (visible) {
-    rootClasses.push(styles.active);
-  }
 
   useEffect(() => {
     document.onkeydown = (evt) => {
@@ -19,7 +15,7 @@ const MyModal = ({ children, visible, setVisible, hideDefaultClose }) => {
         setVisible(false);
       }
     };
-  }, [visible, setVisible]);
+  }, [setVisible]);
 
   return ReactDOM.createPortal(
     <div className={rootClasses.join(" ")} onClick={() => setVisible(false)}>
@@ -35,7 +31,6 @@ const MyModal = ({ children, visible, setVisible, hideDefaultClose }) => {
             <CloseIcon type="primary" />
           </div>
         )}
-
         {children}
       </div>
     </div>,

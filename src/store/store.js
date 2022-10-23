@@ -1,11 +1,12 @@
 import { createStore, applyMiddleware, compose } from "redux";
-import { burgerIngredientsReduser } from "./reducers/burgerIngredientsRedusers";
+import thunk from "redux-thunk";
+import { rootReducer } from "./rootReduser";
 
 const composeEnhancers =
   typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
-    : compose; 
+    : compose;
 
-const enhancer = composeEnhancers();
+const enhancer = composeEnhancers(applyMiddleware(thunk));
 
-export const store = createStore(burgerIngredientsReduser, enhancer);
+export const store = createStore(rootReducer, enhancer);

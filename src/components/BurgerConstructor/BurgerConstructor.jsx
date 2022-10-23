@@ -1,38 +1,40 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { ORDERS_URL } from "../../utils/constants";
-import { useDrop, useDrag } from "react-dnd";
+import { useDrop } from "react-dnd";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Button,
   ConstructorElement,
   CurrencyIcon,
-  DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./BurgerConstructor.module.scss";
 import SimpleBar from "simplebar-react";
 import MyModal from "../MyModal/MyModal";
 import OrderDetails from "../OrderDetails/OrderDetails";
-import submitOrder from "../../utils/submitOrder.js";
 import ConstructorDraggableIngredient from "../ConstructorDraggableIngredient/ConstructorDraggableIngredient";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
+import { fetchOrder } from "../../store/asyncActions/order";
 
 const BurgerConstructor = () => {
-  const {
-    constructorIngredients,
-    constructorBun,
-    totalConstructorPrice,
-    order,
-  } = useSelector((store) => store);
+  const { ingredients } = useSelector(
+    (store) => store.burgerIngredientsReduser
+  );
+  const constructorIngredients = useSelector(
+    (store) => store.constructorReduser.constructorIngredients
+  );
+  const constructorBun = useSelector(
+    (store) => store.constructorReduser.constructorBun
+  );
+  const totalConstructorPrice = useSelector(
+    (store) => store.constructorReduser.totalConstructorPrice
+  );
+  const order = useSelector((store) => store.modalOrderReduser);
 
-  const [heightTopScrollBlock, setHeightTopScrollBlock] = useState(0);
   const [visibleModal, setVisibleModal] = useState(false);
-
-  // useEffect(()=> {
-  //   console.log(constructorIngredients);
-  // }, [constructorIngredients])
+  const [heightTopScrollBlock, setHeightTopScrollBlock] = useState(0);
 
   const dispatch = useDispatch();
   const scrollableNodeRef = useRef();
+  const constructorBottomBlock = useRef();
 
   const [, dropTarget] = useDrop({
     accept: "card",
@@ -52,8 +54,14 @@ const BurgerConstructor = () => {
   });
 
   useEffect(() => {
-    dispatch({ type: "SET_CONSTRUCTOR_PRICE" });
-    dispatch({ type: "SET_ORDER" });
+    if (order.number) {
+      setVisibleModal(true);
+    }
+  }, [order]);
+
+  useEffect(() => {
+    setPrice();
+    dispatch({ type: "UPDATE_INGREDIENTS", payload: countersSelected() });
   }, [constructorBun, constructorIngredients]);
 
   useEffect(() => {
@@ -68,16 +76,32 @@ const BurgerConstructor = () => {
 
   // Отправляем заказ
   const sendOrder = () => {
-    submitOrder(ORDERS_URL, order.orderIngredentID).then((result) => {
-      if (result.success) {
-        dispatch({
-          type: "SET_ORDER",
-          number: result.order.number,
-          name: result.name,
-        });
-      }
-    });
+    let orderId = constructorIngredients.map((ingr) => ingr._id);
+    orderId = [constructorBun._id, ...orderId, constructorBun._id];
+    dispatch(fetchOrder(orderId));
   };
+
+  const countersSelected = () => {
+    const ingredientCounters = ingredients.map((ingredient) => {
+      const ingredientId = ingredient._id;
+      ingredient.__v = 0;
+
+      constructorIngredients.map((constructorIngredient) => {
+        const constructorIngredientId = constructorIngredient._id;
+        if (ingredientId === constructorIngredientId) {
+          ingredient.__v += 1;
+        }
+      });
+
+      if (constructorBun && ingredientId === constructorBun._id) {
+        ingredient.__v += 2;
+      }
+      
+      return ingredient;
+    });
+
+    return ingredientCounters;
+  }
 
   // Удаляем эллемент из конструктора
   const handleClose = (curentIndex) => {
@@ -89,8 +113,10 @@ const BurgerConstructor = () => {
     const windowInnerHeight = window.innerHeight;
     const offsetTopScrollBlock =
       scrollableNodeRef.current.getBoundingClientRect().top;
+    const heigthConstructorBottomBlock =
+      constructorBottomBlock.current.offsetHeight;
     const maxBlockHeigth = Math.floor(
-      windowInnerHeight - offsetTopScrollBlock - 252
+      windowInnerHeight - offsetTopScrollBlock - heigthConstructorBottomBlock
     );
     if (maxBlockHeigth < 104) {
       setHeightTopScrollBlock(104);
@@ -104,6 +130,21 @@ const BurgerConstructor = () => {
   const resizeIngredientBlock = useCallback(() => {
     getCurrentOffsetIngredientBlock();
   }, []);
+
+  const setPrice = () => {
+    let thisTotalSumm = 0;
+
+    for (const key in constructorIngredients) {
+      const element = constructorIngredients[key];
+      thisTotalSumm += element.price;
+    }
+
+    if (constructorBun) {
+      thisTotalSumm += constructorBun.price * 2;
+    }
+
+    dispatch({ type: "SET_CONSTRUCTOR_PRICE", thisTotalSumm });
+  };
 
   const moveCard = useCallback(
     (dragIndex, hoverIndex) => {
@@ -182,50 +223,56 @@ const BurgerConstructor = () => {
             </div>
           )}
         </div>
-        <div className={`${styles.constructorBudBottom}`}>
-          <div className="mt-4">
-            {constructorBun ? (
-              <ConstructorElement
-                type="bottom"
-                isLocked={true}
-                text={`${constructorBun["name"]} - низ`}
-                price={constructorBun["price"]}
-                thumbnail={constructorBun["image"]}
-              />
-            ) : (
-              <div className="constructor-element constructor-element_pos_bottom mt-4">
-                <span
-                  className={`constructor-element__text ${styles.constructorElementTextPreview}`}
-                >
-                  {"Или сюда :)"}
-                </span>
-              </div>
-            )}
+
+        <div ref={constructorBottomBlock} className="pt-4 pb-8">
+          <div className={`${styles.constructorBudBottom}`}>
+            <div>
+              {constructorBun ? (
+                <ConstructorElement
+                  type="bottom"
+                  isLocked={true}
+                  text={`${constructorBun["name"]} - низ`}
+                  price={constructorBun["price"]}
+                  thumbnail={constructorBun["image"]}
+                />
+              ) : (
+                <div className="constructor-element constructor-element_pos_bottom mt-4">
+                  <span
+                    className={`constructor-element__text ${styles.constructorElementTextPreview}`}
+                  >
+                    {"Или сюда :)"}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className={`${styles.constructorSumm} mt-10`}>
+            <div className={`${styles.constructorSummText} mr-10`}>
+              <span className="text text_type_main-large mr-2">
+                {totalConstructorPrice}
+              </span>
+              <CurrencyIcon type="primary" />
+            </div>
+            <Button
+              disabled={!constructorBun ? true : undefined}
+              type="primary"
+              size="large"
+              onClick={() => {
+                sendOrder();
+              }}
+              htmlType="button"
+            >
+              Оформить заказ
+            </Button>
           </div>
         </div>
 
-        <div className={`${styles.constructorSumm} mt-10`}>
-          <div className={`${styles.constructorSummText} mr-10`}>
-            <span className="text text_type_main-large mr-2">
-              {totalConstructorPrice}
-            </span>
-            <CurrencyIcon type="primary" />
-          </div>
-          <Button
-            type="primary"
-            size="large"
-            onClick={() => {
-              setVisibleModal(true);
-              sendOrder();
-            }}
-            htmlType="button"
-          >
-            Оформить заказ
-          </Button>
-        </div>
-        <MyModal visible={visibleModal} setVisible={setVisibleModal}>
-          <OrderDetails number={order.number} />
-        </MyModal>
+        {visibleModal && (
+          <MyModal setVisible={setVisibleModal}>
+            <OrderDetails />
+          </MyModal>
+        )}
       </div>
     </div>
   );
