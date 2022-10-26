@@ -13,6 +13,13 @@ const BurgerIngredients = () => {
   const { ingredients } = useSelector((store) => store.burgerIngredientsReduser);
   const dispatch = useDispatch();
 
+  const constructorIngredients = useSelector(
+    (store) => store.constructorReduser.constructorIngredients
+  );
+  const constructorBun = useSelector(
+    (store) => store.constructorReduser.constructorBun
+  );
+
   const returnType = ingredients.map((ingredientCard) => ingredientCard.type);
   const uniqTypes = [...new Set(returnType)];
 
@@ -23,6 +30,10 @@ const BurgerIngredients = () => {
     scrolledBlock: uniqTypes[0],
     currentEvent: "",
   });
+  
+  useEffect(() => {
+    countersSelected();
+  }, [constructorIngredients, constructorBun])
 
   const scrollableNodeRef = useRef();
   const ingredientBlockRef = useRef([]);
@@ -123,6 +134,21 @@ const BurgerIngredients = () => {
     changeActiveTabScrolled();
   }, [navChange.scrolledBlock]);
 
+
+  const countersSelected = () => {
+    let ingredientCounters = constructorIngredients.map(ingredient => {
+      const ingredientId = ingredient._id;
+      return ingredientId;
+    })
+
+    if (constructorBun) {
+      const ingredientId = constructorBun._id;
+      ingredientCounters.push(ingredientId)
+    }
+
+    return ingredientCounters;
+  }
+
   return (
     <>
       <div className={`${styles.burgerIngredients} mt-5`}>
@@ -157,14 +183,33 @@ const BurgerIngredients = () => {
               ref={addToBlockRefs}
             >
               {ingredients.map(
-                (ingredientCard) =>
-                  ingredientCard.type === uniqType && (
-                    <IngredientCard
-                      key={ingredientCard._id}
-                      ingredientCard={ingredientCard}
-                      openModal={openModal}
-                    />
-                  )
+                (ingredientCard) => {
+                  let total = 0;
+                  let selected = countersSelected();
+
+                  for (let i = 0; i < selected.length; i++) {
+                    const element = selected[i];
+
+                    if ( ingredientCard._id === element ) {
+                      total++;
+
+                      if ( ingredientCard.type === 'Булка') {
+                        total++;
+                      }
+                    }
+                  }
+                  
+                  if (ingredientCard.type === uniqType) {
+                    return (
+                      <IngredientCard
+                        key={ingredientCard._id}
+                        ingredientCard={ingredientCard}
+                        openModal={openModal}
+                        total={total}
+                      />
+                    )
+                  }
+                }
               )}
             </IngredientBlock>
           ))}

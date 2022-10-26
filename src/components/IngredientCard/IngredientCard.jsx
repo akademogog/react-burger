@@ -4,7 +4,7 @@ import styles from "./IngredientCard.module.scss";
 import PropTypes from "prop-types";
 import { useDrag } from "react-dnd";
 
-const IngredientCard = ({ ingredientCard, openModal }) => {
+const IngredientCard = ({ ingredientCard, openModal, total }) => {
   const [, dragRef] = useDrag({
     type: "card",
     item: ingredientCard,
@@ -19,11 +19,11 @@ const IngredientCard = ({ ingredientCard, openModal }) => {
       ref={dragRef}
       className={styles.ingredientCard}
       onClick={onIngredientClick}
-    >{ingredientCard.__v !== 0 && (
+    >{total !== 0 && (
       <div
         className={`${styles.ingredientCounter} text text_type_digits-default`}
       >
-        <span>{ingredientCard.__v}</span>
+        <span>{total}</span>
         
       </div>
       )}

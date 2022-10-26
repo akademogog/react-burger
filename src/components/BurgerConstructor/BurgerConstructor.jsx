@@ -61,7 +61,7 @@ const BurgerConstructor = () => {
 
   useEffect(() => {
     setPrice();
-    dispatch({ type: "UPDATE_INGREDIENTS", payload: countersSelected() });
+    // dispatch({ type: "UPDATE_INGREDIENTS", payload: countersSelected() });
   }, [constructorBun, constructorIngredients]);
 
   useEffect(() => {
@@ -80,28 +80,6 @@ const BurgerConstructor = () => {
     orderId = [constructorBun._id, ...orderId, constructorBun._id];
     dispatch(fetchOrder(orderId));
   };
-
-  const countersSelected = () => {
-    const ingredientCounters = ingredients.map((ingredient) => {
-      const ingredientId = ingredient._id;
-      ingredient.__v = 0;
-
-      constructorIngredients.map((constructorIngredient) => {
-        const constructorIngredientId = constructorIngredient._id;
-        if (ingredientId === constructorIngredientId) {
-          ingredient.__v += 1;
-        }
-      });
-
-      if (constructorBun && ingredientId === constructorBun._id) {
-        ingredient.__v += 2;
-      }
-      
-      return ingredient;
-    });
-
-    return ingredientCounters;
-  }
 
   // Удаляем эллемент из конструктора
   const handleClose = (curentIndex) => {
@@ -255,12 +233,10 @@ const BurgerConstructor = () => {
               <CurrencyIcon type="primary" />
             </div>
             <Button
-              disabled={!constructorBun ? true : undefined}
+              disabled={!constructorBun}
               type="primary"
               size="large"
-              onClick={() => {
-                sendOrder();
-              }}
+              onClick={sendOrder}
               htmlType="button"
             >
               Оформить заказ
