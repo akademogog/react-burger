@@ -13,7 +13,9 @@ export const fetchOrder = (ingredientsID) => {
     })
       .then((response) => checkResponse(response))
       .then(res => {
-        dispatch(setOrderNumber(res.order.number))
+        if (res.success) {
+          dispatch(setOrderNumber(res.order.number))
+        }
       })
       .catch((error) => error)
   };

@@ -1,5 +1,6 @@
 import {
-  SET_CURRENT_INGREDIENT
+  SET_CURRENT_INGREDIENT,
+  DEL_CURRENT_INGREDIENT
 } from "../actions/burgerIngredientsActions";
 
 const modalIngredientState = {
@@ -12,6 +13,12 @@ export const modalIngredientReduser = (state = modalIngredientState, action) => 
       return {
         ...state,
         currentIngredient: action.ingredient,
+      };
+    }
+    case DEL_CURRENT_INGREDIENT: {
+      return {
+        ...state,
+        currentIngredient: null,
       };
     }
     default:

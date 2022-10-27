@@ -30,6 +30,12 @@ const BurgerIngredients = () => {
     scrolledBlock: uniqTypes[0],
     currentEvent: "",
   });
+
+  useEffect(() => {
+    if (!visibleModal) {
+      dispatch({ type: "DEL_CURRENT_INGREDIENT" });
+    }
+  }, [visibleModal])
   
   useEffect(() => {
     countersSelected();

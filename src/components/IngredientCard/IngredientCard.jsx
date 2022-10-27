@@ -65,6 +65,7 @@ const ingredientCardPropTypes = PropTypes.shape({
 IngredientCard.propTypes = {
   ingredientCard: ingredientCardPropTypes,
   openModal: PropTypes.func,
+  total: PropTypes.number,
 };
 
 export default IngredientCard;
