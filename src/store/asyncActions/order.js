@@ -1,17 +1,16 @@
-import { checkResponse } from "../../utils/checkResponse.js";
 import { ORDERS_URL } from "../../utils/constants";
+import { request } from "../../utils/request.js";
 import { setOrderNumber } from "../reducers/modalOrderReduser.js";
 
 export const fetchOrder = (ingredientsID) => {
   return (dispatch) => {
-    fetch(ORDERS_URL, {
+    request(ORDERS_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
       body: JSON.stringify({ ingredients: ingredientsID }),
     })
-      .then((response) => checkResponse(response))
       .then(res => {
         if (res.success) {
           dispatch(setOrderNumber(res.order.number))

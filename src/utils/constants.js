@@ -7,5 +7,7 @@ export const LOGIN_URL = `${BASE_API_URL}/auth/login`;
 export const TOKEN_URL = `${BASE_API_URL}/auth/token`;
 export const LOGOUT_URL = `${BASE_API_URL}/auth/logout`;
 export const GET_USER_URL = `${BASE_API_URL}/auth/user`;
+export const PASSWORD_URL = `${BASE_API_URL}/password-reset`;
+export const PASSWORD_RESET_URL = `${PASSWORD_URL}/reset`;
 
 export const INGREDIENT_TYPE = { bun: "Булка", main: "Начинки", sauce: "Соус" };

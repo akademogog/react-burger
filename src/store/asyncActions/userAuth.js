@@ -1,17 +1,16 @@
-import { checkResponse } from "../../utils/checkResponse.js";
 import { REGISTER_URL, LOGIN_URL, TOKEN_URL, LOGOUT_URL, GET_USER_URL } from "../../utils/constants";
+import { request } from "../../utils/request.js";
 import { userRegister, userLogin, userToken, userLogout, getUser, patchUser } from "../reducers/userReduser.js";
 
 export const fetchRegister = ({ email, name, password }) => {
   return (dispatch) => {
-    fetch(REGISTER_URL, {
+    request(REGISTER_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
       body: JSON.stringify({ email, name, password }),
     })
-      .then((response) => checkResponse(response))
       .then((res) => {
         if (res.success) {
           dispatch(userRegister(res));
@@ -23,14 +22,13 @@ export const fetchRegister = ({ email, name, password }) => {
 
 export const fetchLogin = ({ email, password }) => {
   return (dispatch) => {
-    fetch(LOGIN_URL, {
+    request(LOGIN_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
       body: JSON.stringify({ email, password }),
     })
-      .then((response) => checkResponse(response))
       .then((res) => {
         if (res.success) {
           dispatch(userLogin(res));
@@ -42,14 +40,13 @@ export const fetchLogin = ({ email, password }) => {
 
 export const fetchToken = () => {
   return (dispatch) => {
-    fetch(TOKEN_URL, {
+    request(TOKEN_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
       body: JSON.stringify({ token: localStorage.getItem('refreshToken') }),
     })
-      .then((response) => checkResponse(response))
       .then((res) => {
         if (res.success) {
           dispatch(userToken(res));
@@ -61,14 +58,13 @@ export const fetchToken = () => {
 
 export const fetchLogout = () => {
   return (dispatch) => {
-    fetch(LOGOUT_URL, {
+    request(LOGOUT_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
       body: JSON.stringify({ token: localStorage.getItem('refreshToken') }),
     })
-      .then((response) => checkResponse(response))
       .then((res) => {
         if (res.success) {
           dispatch(userLogout(res));
@@ -80,14 +76,13 @@ export const fetchLogout = () => {
 
 export const fetchGetUser = (accessToken) => {
   return (dispatch) => {
-    fetch(GET_USER_URL, {
+    request(GET_USER_URL, {
       method: "GET",
       headers: {
         "Content-Type": "application/json;charset=utf-8",
         Authorization: accessToken,
       },
     })
-      .then((response) => checkResponse(response))
       .then((res) => {
         if (res.success) {
           dispatch(getUser(res));
@@ -103,7 +98,7 @@ export const fetchGetUser = (accessToken) => {
 
 export const fetchPatchUser = ({ accessToken, email, name, password }) => {
   return (dispatch) => {
-    fetch(GET_USER_URL, {
+    request(GET_USER_URL, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json;charset=utf-8",
@@ -111,7 +106,6 @@ export const fetchPatchUser = ({ accessToken, email, name, password }) => {
       },
       body: JSON.stringify({ email, name, password }),
     })
-      .then((response) => checkResponse(response))
       .then((res) => {
         if (res.success) {
           dispatch(patchUser(res));

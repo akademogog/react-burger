@@ -2,23 +2,23 @@ import React, { useState } from 'react'
 import { Input, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link, Redirect } from 'react-router-dom';
 import styles from './ForgotPassword.module.scss'
+import { useForm } from "../../hooks/useForm";
+import { PASSWORD_URL } from '../../utils/constants';
+import { request } from '../../utils/request';
 
 const ForgotPassword = () => {
   const [redirect, setRedirect] = useState(false);
-  const [forgotForm, setForgotForm] = useState({
-    email: ''
-  });
+  const {values, handleChange} = useForm({});
 
   const forgotPass = async (e) => {
     e.preventDefault();
-    await fetch('https://norma.nomoreparties.space/api/password-reset', {
+    await request(PASSWORD_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=utf-8'
       },
-      body: JSON.stringify(forgotForm)
-    }).then(res => res.json())
-    .then(responce => {
+      body: JSON.stringify(values)
+    }).then(responce => {
       if (responce.success) {
         setRedirect(true);
       }
@@ -42,9 +42,9 @@ const ForgotPassword = () => {
         <Input
           type={'text'}
           placeholder={'Укажите e-mail'}
-          onChange={e => setForgotForm({...forgotForm, email: e.target.value})}
-          value={forgotForm.email}
-          name={'name'}
+          onChange={handleChange}
+          value={values.email}
+          name={'email'}
           error={false}
           errorText={'Ошибка'}
           size={'default'}

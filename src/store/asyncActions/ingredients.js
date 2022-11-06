@@ -1,11 +1,11 @@
 import { INGREDIENTS_URL, INGREDIENT_TYPE } from "../../utils/constants";
+import { request } from "../../utils/request";
 import { loadIngredientsRequest, loadIngredientsSuccess, loadIngredientsError } from "../reducers/burgerIngredientsReduser";
 
 export const fetchIngredients = () => {
   return (dispatch) => {
     dispatch(loadIngredientsRequest(true));
-    fetch(INGREDIENTS_URL)
-      .then((response) => response.json())
+    request(INGREDIENTS_URL)
       .then((responseResult) => {
         const responseResultData = responseResult.data;
 

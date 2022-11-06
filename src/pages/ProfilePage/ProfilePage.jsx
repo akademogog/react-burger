@@ -15,14 +15,12 @@ import {
   fetchToken,
   fetchPatchUser,
 } from "../../store/asyncActions/userAuth";
+import { useForm } from "../../hooks/useForm";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
   const profileForm = useSelector((store) => store.userReduser);
-  const [changeForm, setChangeForm] = useState({
-    ...profileForm,
-    password: "",
-  });
+  const {values, handleChange, setValues} = useForm({});
   const [disabledInput, setDisabledInput] = useState({
     name: true,
     email: true,
@@ -35,10 +33,10 @@ const ProfilePage = () => {
   const passRef = useRef(null);
 
   useEffect(() => {
-    setChangeForm({
+    setValues({
       ...profileForm,
       password: "",
-    });
+    })
   }, [profileForm]);
 
   useEffect(() => {
@@ -72,7 +70,7 @@ const ProfilePage = () => {
 
   const patch = (e) => {
     e.preventDefault();
-    getFetchToken(fetchPatchUser(changeForm));
+    getFetchToken(fetchPatchUser(values));
     setDisabledInput({
       name: true,
       email: true,
@@ -91,10 +89,10 @@ const ProfilePage = () => {
   };
 
   const resetForm = () => {
-    setChangeForm({
+    setValues({
       ...profileForm,
       password: "",
-    });
+    })
     setDisabledInput({
       name: true,
       email: true,
@@ -140,10 +138,8 @@ const ProfilePage = () => {
             disabled={disabledInput.name}
             type={"text"}
             placeholder={"Имя"}
-            onChange={(e) =>
-              setChangeForm({ ...changeForm, name: e.target.value })
-            }
-            value={changeForm.name}
+            onChange={handleChange}
+            value={values.name}
             name={"name"}
             error={false}
             errorText={"Ошибка"}
@@ -162,10 +158,8 @@ const ProfilePage = () => {
             disabled={disabledInput.email}
             type={"text"}
             placeholder={"E-mail"}
-            onChange={(e) =>
-              setChangeForm({ ...changeForm, email: e.target.value })
-            }
-            value={changeForm.email}
+            onChange={handleChange}
+            value={values.email}
             name={"email"}
             error={false}
             errorText={"Ошибка"}
@@ -184,10 +178,8 @@ const ProfilePage = () => {
             disabled={disabledInput.password}
             type={disabledInput.showPass ? "text" : "password"}
             placeholder={"Пароль"}
-            onChange={(e) =>
-              setChangeForm({ ...changeForm, password: e.target.value })
-            }
-            value={changeForm.password}
+            onChange={handleChange}
+            value={values.password}
             name={"password"}
             error={false}
             errorText={"Ошибка"}
@@ -214,9 +206,9 @@ const ProfilePage = () => {
             )}
           </div>
         </div>
-        {(profileForm.name !== changeForm.name ||
-          profileForm.email !== changeForm.email ||
-          changeForm.password) && (
+        {(profileForm.name !== values.name ||
+          profileForm.email !== values.email ||
+          values.password) && (
           <div>
             <Button
               type="primary"

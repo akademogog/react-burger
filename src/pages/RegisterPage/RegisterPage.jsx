@@ -4,20 +4,17 @@ import { Link, Redirect } from 'react-router-dom';
 import styles from './RegisterPage.module.scss'
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchRegister } from "../../store/asyncActions/userAuth";
+import { useForm } from "../../hooks/useForm";
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
   const isAuth = useSelector(store => store.userReduser.isAuth);
   
-  const [registerForm, setRegisterForm] = useState({
-    name: '',
-    email: '',
-    password: '',
-  });
+  const {values, handleChange} = useForm({});
 
   const reg = (e) => {
     e.preventDefault();
-    dispatch(fetchRegister(registerForm));
+    dispatch(fetchRegister(values));
   };
 
   if (isAuth) {
@@ -37,8 +34,8 @@ const RegisterPage = () => {
         <Input
           type={'text'}
           placeholder={'Имя'}
-          onChange={e => setRegisterForm({...registerForm, name: e.target.value})}
-          value={registerForm.name}
+          onChange={handleChange}
+          value={values.name}
           name={'name'}
           error={false}
           errorText={'Ошибка'}
@@ -49,9 +46,9 @@ const RegisterPage = () => {
         <Input
           type={'text'}
           placeholder={'E-mail'}
-          onChange={e => setRegisterForm({...registerForm, email: e.target.value})}
-          value={registerForm.email}
-          name={'name'}
+          onChange={handleChange}
+          value={values.email}
+          name={'email'}
           error={false}
           errorText={'Ошибка'}
           size={'default'}
@@ -61,9 +58,9 @@ const RegisterPage = () => {
         <Input
           type={'password'}
           placeholder={'Пароль'}
-          onChange={e => setRegisterForm({...registerForm, password: e.target.value})}
-          value={registerForm.password}
-          name={'name'}
+          onChange={handleChange}
+          value={values.password}
+          name={'password'}
           error={false}
           errorText={'Ошибка'}
           size={'default'}

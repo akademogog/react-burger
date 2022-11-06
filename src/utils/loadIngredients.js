@@ -1,6 +1,8 @@
+import { checkResponse } from "./checkResponse";
+import { request } from "./request";
+
 const loadIngredients = async (INGREDIENTS_URL, INGREDIENT_TYPE) => {
-  const promise = await fetch(INGREDIENTS_URL)
-    .then((response) => response.json())
+  const promise = await request(INGREDIENTS_URL)
     .then((responseResult) => {
       const responseResultData = responseResult.data;
 

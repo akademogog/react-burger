@@ -1,24 +1,23 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Input, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link } from 'react-router-dom';
 import styles from './ResetPassword.module.scss'
+import { PASSWORD_RESET_URL } from '../../utils/constants';
+import { useForm } from '../../hooks/useForm';
+import { request } from '../../utils/request';
 
 const ResetPassword = () => {
-  const [resetForm, setResetForm] = useState({
-    password: '',
-    token: ''
-  });
+  const {values, handleChange} = useForm({});
 
   const resetPass = async (e) => {
     e.preventDefault();
-    await fetch('https://norma.nomoreparties.space/api/password-reset/reset', {
+    await request(PASSWORD_RESET_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=utf-8'
       },
-      body: JSON.stringify(resetForm)
-    }).then(res => res.json())
-    .then(responce => {
+      body: JSON.stringify(values)
+    }).then(responce => {
       if (responce.success) {
         console.log(responce);
       }
@@ -32,9 +31,9 @@ const ResetPassword = () => {
         <Input
           type={'text'}
           placeholder={'Введите новый пароль'}
-          onChange={e => setResetForm({...resetForm, password: e.target.value})}
-          value={resetForm.password}
-          name={'name'}
+          onChange={handleChange}
+          value={values.password}
+          name={'password'}
           error={false}
           errorText={'Ошибка'}
           size={'default'}
@@ -45,9 +44,9 @@ const ResetPassword = () => {
         <Input
           type={'password'}
           placeholder={'Введите код из письма'}
-          onChange={e => setResetForm({...resetForm, token: e.target.value})}
-          value={resetForm.token}
-          name={'name'}
+          onChange={handleChange}
+          value={values.token}
+          name={'token'}
           error={false}
           errorText={'Ошибка'}
           size={'default'}
