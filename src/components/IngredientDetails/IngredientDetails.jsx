@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import styles from "./IngredientDetails.module.scss";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
-
 const IngredientDetails = ({ closeModal }) => {
   const { currentIngredient } = useSelector((store) => store.modalIngredientReduser);
 

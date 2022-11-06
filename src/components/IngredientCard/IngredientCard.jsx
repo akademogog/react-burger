@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./IngredientCard.module.scss";
 import PropTypes from "prop-types";
@@ -12,6 +12,7 @@ const IngredientCard = ({ ingredientCard, openModal, total }) => {
 
   const onIngredientClick = () => {
     openModal(ingredientCard);
+    window.history.pushState(null, "", '/ingredients/' + ingredientCard._id);
   };
 
   return (
@@ -19,13 +20,13 @@ const IngredientCard = ({ ingredientCard, openModal, total }) => {
       ref={dragRef}
       className={styles.ingredientCard}
       onClick={onIngredientClick}
-    >{total !== 0 && (
-      <div
-        className={`${styles.ingredientCounter} text text_type_digits-default`}
-      >
-        <span>{total}</span>
-        
-      </div>
+    >
+      {total !== 0 && (
+        <div
+          className={`${styles.ingredientCounter} text text_type_digits-default`}
+        >
+          <span>{total}</span>
+        </div>
       )}
       <img
         src={ingredientCard.image}

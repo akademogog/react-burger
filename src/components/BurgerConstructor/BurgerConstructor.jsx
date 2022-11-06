@@ -13,8 +13,10 @@ import OrderDetails from "../OrderDetails/OrderDetails";
 import ConstructorDraggableIngredient from "../ConstructorDraggableIngredient/ConstructorDraggableIngredient";
 import { v4 as uuidv4 } from "uuid";
 import { fetchOrder } from "../../store/asyncActions/order";
+import { useHistory } from "react-router-dom";
 
 const BurgerConstructor = () => {
+  const history = useHistory();
   const { ingredients } = useSelector(
     (store) => store.burgerIngredientsReduser
   );
@@ -28,6 +30,7 @@ const BurgerConstructor = () => {
     (store) => store.constructorReduser.totalConstructorPrice
   );
   const order = useSelector((store) => store.modalOrderReduser);
+  const token = useSelector((store) => store.userReduser.accessToken);
 
   const [visibleModal, setVisibleModal] = useState(false);
   const [heightTopScrollBlock, setHeightTopScrollBlock] = useState(0);
@@ -76,9 +79,13 @@ const BurgerConstructor = () => {
 
   // Отправляем заказ
   const sendOrder = () => {
-    let orderId = constructorIngredients.map((ingr) => ingr._id);
-    orderId = [constructorBun._id, ...orderId, constructorBun._id];
-    dispatch(fetchOrder(orderId));
+    if (token) {
+      let orderId = constructorIngredients.map((ingr) => ingr._id);
+      orderId = [constructorBun._id, ...orderId, constructorBun._id];
+      dispatch(fetchOrder(orderId));
+    } else {
+      history.push("/login");
+    }
   };
 
   // Удаляем эллемент из конструктора
@@ -214,7 +221,7 @@ const BurgerConstructor = () => {
                   thumbnail={constructorBun["image"]}
                 />
               ) : (
-                <div className="constructor-element constructor-element_pos_bottom mt-4">
+                <div className="constructor-element constructor-element_pos_bottom">
                   <span
                     className={`constructor-element__text ${styles.constructorElementTextPreview}`}
                   >

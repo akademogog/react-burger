@@ -61,6 +61,7 @@ const BurgerIngredients = () => {
 
   const closeModal = () => {
     setVisibleModal(false);
+    window.history.pushState(null, "", '/');
   };
 
   // устанавливает высоту блока ингридиентов
