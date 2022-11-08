@@ -6,8 +6,7 @@ import "simplebar-react/dist/simplebar.min.css";
 import IngredientCard from "../IngredientCard/IngredientCard.jsx";
 import IngredientBlock from "../IngredientBlock/IngredientBlock.jsx";
 import styles from "./BurgerIngredients.module.scss";
-import MyModal from "../MyModal/MyModal";
-import IngredientDetails from "../IngredientDetails/IngredientDetails.jsx";
+import { DEL_CURRENT_INGREDIENT } from "../../store/actions/burgerIngredientsActions.js";
 
 const BurgerIngredients = () => {
   const { ingredients } = useSelector((store) => store.burgerIngredientsReduser);
@@ -33,7 +32,7 @@ const BurgerIngredients = () => {
 
   useEffect(() => {
     if (!visibleModal) {
-      dispatch({ type: "DEL_CURRENT_INGREDIENT" });
+      dispatch({ type: DEL_CURRENT_INGREDIENT });
     }
   }, [visibleModal])
   
@@ -52,16 +51,6 @@ const BurgerIngredients = () => {
     if (el && !ingredientBlockRef.current.includes(el)) {
       ingredientBlockRef.current.push(el);
     }
-  };
-
-  const openModal = (ingredient) => {
-    dispatch({ type: "SET_CURRENT_INGREDIENT", ingredient });
-    setVisibleModal(true);
-  };
-
-  const closeModal = () => {
-    setVisibleModal(false);
-    window.history.pushState(null, "", '/');
   };
 
   // устанавливает высоту блока ингридиентов
@@ -211,7 +200,6 @@ const BurgerIngredients = () => {
                       <IngredientCard
                         key={ingredientCard._id}
                         ingredientCard={ingredientCard}
-                        openModal={openModal}
                         total={total}
                       />
                     )
@@ -222,11 +210,6 @@ const BurgerIngredients = () => {
           ))}
         </SimpleBar>
       </div>
-      {visibleModal && (
-        <MyModal setVisible={setVisibleModal} hideDefaultClose={true}>
-          <IngredientDetails closeModal={closeModal} />
-        </MyModal>
-      )}
     </>
   );
 };

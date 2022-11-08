@@ -139,7 +139,7 @@ const ProfilePage = () => {
             type={"text"}
             placeholder={"Имя"}
             onChange={handleChange}
-            value={values.name}
+            value={values.name || ''}
             name={"name"}
             error={false}
             errorText={"Ошибка"}
@@ -159,7 +159,7 @@ const ProfilePage = () => {
             type={"text"}
             placeholder={"E-mail"}
             onChange={handleChange}
-            value={values.email}
+            value={values.email || ''}
             name={"email"}
             error={false}
             errorText={"Ошибка"}
@@ -179,7 +179,7 @@ const ProfilePage = () => {
             type={disabledInput.showPass ? "text" : "password"}
             placeholder={"Пароль"}
             onChange={handleChange}
-            value={values.password}
+            value={values.password || ''}
             name={"password"}
             error={false}
             errorText={"Ошибка"}
@@ -214,7 +214,7 @@ const ProfilePage = () => {
               type="primary"
               size="large"
               onClick={patch}
-              htmlType="button"
+              htmlType={'submit'}
             >
               Сохранить
             </Button>

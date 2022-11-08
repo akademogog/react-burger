@@ -1,25 +1,29 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./IngredientCard.module.scss";
 import PropTypes from "prop-types";
 import { useDrag } from "react-dnd";
+import { ingredientCardPropTypes } from "../../utils/types";
+import { useLocation, Link } from "react-router-dom";
 
-const IngredientCard = ({ ingredientCard, openModal, total }) => {
+const IngredientCard = ({ ingredientCard, total }) => {
+  const location = useLocation();
   const [, dragRef] = useDrag({
     type: "card",
     item: ingredientCard,
   });
 
-  const onIngredientClick = () => {
-    openModal(ingredientCard);
-    window.history.pushState(null, "", '/ingredients/' + ingredientCard._id);
-  };
-
   return (
-    <div
+    <Link
+      className={styles.link}
+      to={{
+        pathname: `/ingredients/${ingredientCard._id}`,
+        state: { background: location },
+      }}
+    >
+      <div
       ref={dragRef}
       className={styles.ingredientCard}
-      onClick={onIngredientClick}
     >
       {total !== 0 && (
         <div
@@ -30,7 +34,7 @@ const IngredientCard = ({ ingredientCard, openModal, total }) => {
       )}
       <img
         src={ingredientCard.image}
-        alt=""
+        alt={ingredientCard.name}
         className={`${styles.ingredientImage} mb-2`}
       />
       <div className={`${styles.ingredientPrice} mb-2`}>
@@ -45,23 +49,9 @@ const IngredientCard = ({ ingredientCard, openModal, total }) => {
         {ingredientCard.name}
       </div>
     </div>
+    </Link>
   );
 };
-
-const ingredientCardPropTypes = PropTypes.shape({
-  _id: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
-  proteins: PropTypes.number.isRequired,
-  fat: PropTypes.number.isRequired,
-  carbohydrates: PropTypes.number.isRequired,
-  calories: PropTypes.number.isRequired,
-  price: PropTypes.number.isRequired,
-  image: PropTypes.string.isRequired,
-  image_mobile: PropTypes.string.isRequired,
-  image_large: PropTypes.string.isRequired,
-  __v: PropTypes.number,
-});
 
 IngredientCard.propTypes = {
   ingredientCard: ingredientCardPropTypes,

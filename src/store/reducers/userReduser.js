@@ -67,11 +67,3 @@ export const userReduser = (state = userState, action) => {
       return state;
   }
 };
-
-export const userRegister = (payload) => ({type: USER_REGISTER, payload});
-export const userLogin = (payload) => ({type: USER_LOGIN, payload});
-export const userToken = (payload) => ({type: USER_TOKEN, payload});
-export const userLogout = (payload) => ({type: USER_LOGOUT, payload});
-export const getUser = (payload) => ({type: GET_USER, payload});
-export const patchUser = (payload) => ({type: PATCH_USER, payload});
-

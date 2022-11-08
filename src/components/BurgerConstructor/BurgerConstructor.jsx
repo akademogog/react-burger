@@ -14,6 +14,7 @@ import ConstructorDraggableIngredient from "../ConstructorDraggableIngredient/Co
 import { v4 as uuidv4 } from "uuid";
 import { fetchOrder } from "../../store/asyncActions/order";
 import { useHistory } from "react-router-dom";
+import { DEL_CONSTRUCTOR_INGREDIENTS, SET_CONSTRUCTOR_BUN, SET_CONSTRUCTOR_INGREDIENTS, SET_CONSTRUCTOR_PRICE, UPDATE_CONSTRUCTOR_INGREDIENTS } from "../../store/actions/burgerIngredientsActions";
 
 const BurgerConstructor = () => {
   const history = useHistory();
@@ -43,10 +44,10 @@ const BurgerConstructor = () => {
     accept: "card",
     drop(ingredient) {
       if (ingredient["type"] === "Булка") {
-        dispatch({ type: "SET_CONSTRUCTOR_BUN", ingredient });
+        dispatch({ type: SET_CONSTRUCTOR_BUN, ingredient });
       } else {
         dispatch({
-          type: "SET_CONSTRUCTOR_INGREDIENTS",
+          type: SET_CONSTRUCTOR_INGREDIENTS,
           ingredient: {
             ...ingredient,
             dragId: uuidv4(),
@@ -90,7 +91,7 @@ const BurgerConstructor = () => {
 
   // Удаляем эллемент из конструктора
   const handleClose = (curentIndex) => {
-    dispatch({ type: "DEL_CONSTRUCTOR_INGREDIENTS", curentIndex });
+    dispatch({ type: DEL_CONSTRUCTOR_INGREDIENTS, curentIndex });
   };
 
   // Расчитываем и устанавливаем текущую высоту блока ингридиентов
@@ -128,7 +129,7 @@ const BurgerConstructor = () => {
       thisTotalSumm += constructorBun.price * 2;
     }
 
-    dispatch({ type: "SET_CONSTRUCTOR_PRICE", thisTotalSumm });
+    dispatch({ type: SET_CONSTRUCTOR_PRICE, thisTotalSumm });
   };
 
   const moveCard = useCallback(
@@ -138,7 +139,7 @@ const BurgerConstructor = () => {
       newCards.splice(dragIndex, 1);
       newCards.splice(hoverIndex, 0, dragCard);
       dispatch({
-        type: "UPDATE_CONSTRUCTOR_INGREDIENTS",
+        type: UPDATE_CONSTRUCTOR_INGREDIENTS,
         ingredients: newCards,
       });
     },
@@ -252,7 +253,7 @@ const BurgerConstructor = () => {
         </div>
 
         {visibleModal && (
-          <MyModal setVisible={setVisibleModal}>
+          <MyModal modalClose={setVisibleModal}>
             <OrderDetails />
           </MyModal>
         )}

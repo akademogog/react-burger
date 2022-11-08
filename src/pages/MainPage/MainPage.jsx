@@ -1,19 +1,15 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import BurgerConstructor from "../../components/BurgerConstructor/BurgerConstructor";
 import BurgerIngredients from "../../components/BurgerIngredients/BurgerIngredients";
 import styles from "./MainPage.module.scss";
-import { fetchIngredients } from "../../store/asyncActions/ingredients";
 
 const MainPage = () => {
-  const { isLoading, ingredients, isError } = useSelector((store) => store.burgerIngredientsReduser);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchIngredients());
-  }, []);
+  const { isLoading, ingredients, isError } = useSelector(
+    (store) => store.burgerIngredientsReduser
+  );
 
   return (
     <div className={`${styles.mainContainer}`}>
@@ -26,12 +22,10 @@ const MainPage = () => {
         )}
 
         {!isLoading && !isError && ingredients.length && (
-          <>
-            <DndProvider backend={HTML5Backend}>
-              <BurgerIngredients />
-              <BurgerConstructor />
-            </DndProvider>
-          </>
+          <DndProvider backend={HTML5Backend}>
+            <BurgerIngredients />
+            <BurgerConstructor />
+          </DndProvider>
         )}
 
         {!isLoading && isError && !ingredients.length && (

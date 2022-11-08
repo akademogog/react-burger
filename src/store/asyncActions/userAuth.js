@@ -1,6 +1,6 @@
 import { REGISTER_URL, LOGIN_URL, TOKEN_URL, LOGOUT_URL, GET_USER_URL } from "../../utils/constants";
 import { request } from "../../utils/request.js";
-import { userRegister, userLogin, userToken, userLogout, getUser, patchUser } from "../reducers/userReduser.js";
+import { userRegister, userLogin, userToken, userLogout, getUser, patchUser } from "../actions/userActions";
 
 export const fetchRegister = ({ email, name, password }) => {
   return (dispatch) => {
@@ -49,6 +49,7 @@ export const fetchToken = () => {
     })
       .then((res) => {
         if (res.success) {
+          console.log(res);
           dispatch(userToken(res));
         }
       })

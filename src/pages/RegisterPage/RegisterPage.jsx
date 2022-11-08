@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Input, Button } from "@ya.praktikum/react-developer-burger-ui-components";
-import { Link, Redirect } from 'react-router-dom';
+import { Link, Redirect, useLocation } from 'react-router-dom';
 import styles from './RegisterPage.module.scss'
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchRegister } from "../../store/asyncActions/userAuth";
+import { fetchRegister, fetchToken } from "../../store/asyncActions/userAuth";
 import { useForm } from "../../hooks/useForm";
 
 const RegisterPage = () => {
+  const location = useLocation();
   const dispatch = useDispatch();
-  const isAuth = useSelector(store => store.userReduser.isAuth);
+  const token = useSelector((store) => store.userReduser.accessToken);
   
   const {values, handleChange} = useForm({});
 
@@ -17,14 +18,14 @@ const RegisterPage = () => {
     dispatch(fetchRegister(values));
   };
 
-  if (isAuth) {
-    return (
-      <Redirect
-        to={{
-          pathname: '/'
-        }}
-      />
-    );
+  useEffect(() => {
+    if (!token) {
+      dispatch(fetchToken());
+    }
+  }, []);
+
+  if (token) {
+    return <Redirect to={location?.state?.from || "/"} />;
   }
 
   return (
@@ -35,7 +36,7 @@ const RegisterPage = () => {
           type={'text'}
           placeholder={'Имя'}
           onChange={handleChange}
-          value={values.name}
+          value={values.name || ''}
           name={'name'}
           error={false}
           errorText={'Ошибка'}
@@ -47,7 +48,7 @@ const RegisterPage = () => {
           type={'text'}
           placeholder={'E-mail'}
           onChange={handleChange}
-          value={values.email}
+          value={values.email || ''}
           name={'email'}
           error={false}
           errorText={'Ошибка'}
@@ -59,7 +60,7 @@ const RegisterPage = () => {
           type={'password'}
           placeholder={'Пароль'}
           onChange={handleChange}
-          value={values.password}
+          value={values.password || ''}
           name={'password'}
           error={false}
           errorText={'Ошибка'}
@@ -68,7 +69,7 @@ const RegisterPage = () => {
         />
       </div>
       <div className="mb-20">
-        <Button type="primary" size="medium">Зарегистрироваться</Button>
+        <Button htmlType={'submit'} type="primary" size="medium">Зарегистрироваться</Button>
       </div>
       <p className="text text_type_main-default text_color_inactive">Вы — новый пользователь? <Link className={`${styles.link}`} to="/login">Войти</Link></p>
     </form>

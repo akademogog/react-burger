@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 import styles from "./IngridientPage.module.scss";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { fetchIngredients } from "../../store/asyncActions/ingredients";
 
 const IngridientPage = () => {
-  const dispatch = useDispatch();
   const thisId = useParams();
   const { ingredients } = useSelector(
     (store) => store.burgerIngredientsReduser
@@ -13,16 +11,10 @@ const IngridientPage = () => {
   const [currentIngredient, setCurrentIngredient] = useState([]);
 
   useEffect(() => {
-    dispatch(fetchIngredients());
-  }, []);
-
-  useEffect(() => {
     if (ingredients.length) {
       setCurrentIngredient(ingredients.find((el) => el._id === thisId.id));
     }
   }, [ingredients]);
-
-  console.log(currentIngredient);
 
   return (
     <div className={`${styles.ingredientPage}`}>
@@ -31,7 +23,7 @@ const IngridientPage = () => {
       </div>
       <img
         src={currentIngredient.image_large}
-        alt=""
+        alt={currentIngredient.name}
         className={`${styles.ingredientImage} mb-4`}
       />
       <h3

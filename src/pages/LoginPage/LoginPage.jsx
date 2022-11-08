@@ -1,32 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import {
   Input,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { Link } from "react-router-dom";
+import { Link, Redirect, useLocation } from "react-router-dom";
 import styles from "./LoginPage.module.scss";
-import { useDispatch } from "react-redux";
-import { fetchLogin } from "../../store/asyncActions/userAuth";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchLogin, fetchToken } from "../../store/asyncActions/userAuth";
 import { useForm } from "../../hooks/useForm";
 
 const LoginPage = () => {
+  const location = useLocation();
   const dispatch = useDispatch();
-  const {values, handleChange} = useForm({});
+  const token = useSelector((store) => store.userReduser.accessToken);
+
+  const { values, handleChange } = useForm({});
 
   const login = (e) => {
     e.preventDefault();
     dispatch(fetchLogin(values));
   };
 
+  useEffect(() => {
+    if (!token) {
+      dispatch(fetchToken());
+    }
+  }, []);
+
+  if (token) {
+    return <Redirect to={location?.state?.from || "/"} />;
+  }
+
   return (
     <form className={`${styles.loginForm}`} onSubmit={login}>
-      <p className="text text_type_main-medium mb-6">Вход</p>  
+      <p className="text text_type_main-medium mb-6">Вход</p>
       <div className="mb-6">
         <Input
           type={"text"}
           placeholder={"E-mail"}
           onChange={handleChange}
-          value={values.email}
+          value={values.email || ""}
           name={"email"}
           error={false}
           errorText={"Ошибка"}
@@ -38,7 +51,7 @@ const LoginPage = () => {
           type={"password"}
           placeholder={"Пароль"}
           onChange={handleChange}
-          value={values.password}
+          value={values.password || ""}
           name={"password"}
           error={false}
           errorText={"Ошибка"}
@@ -47,7 +60,7 @@ const LoginPage = () => {
         />
       </div>
       <div className="mb-20">
-        <Button type="primary" size="medium">
+        <Button htmlType="submit" type="primary" size="medium">
           Войти
         </Button>
       </div>

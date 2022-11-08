@@ -2,10 +2,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import styles from "./IngredientDetails.module.scss";
-import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
+import { useParams } from "react-router-dom";
 
-const IngredientDetails = ({ closeModal }) => {
-  const { currentIngredient } = useSelector((store) => store.modalIngredientReduser);
+const IngredientDetails = () => {
+  const { ingredients } = useSelector((store) => store.burgerIngredientsReduser);
+  let { id } = useParams();
+  const currentIngredient = ingredients.find(el => el._id === id);
 
   return (
     currentIngredient &&
@@ -14,16 +16,10 @@ const IngredientDetails = ({ closeModal }) => {
         <h2 className={`${styles.titleBlock} text text_type_main-large`}>
           Детали ингредиента
         </h2>
-        <div
-          className={`${styles.closeButton}`}
-          onClick={() => closeModal(false)}
-        >
-          <CloseIcon type="primary" />
-        </div>
       </div>
       <img
         src={currentIngredient.image_large}
-        alt=""
+        alt={currentIngredient.name}
         className={`${styles.ingredientImage} mb-4`}
       />
       <h3
