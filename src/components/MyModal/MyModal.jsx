@@ -4,15 +4,15 @@ import styles from "./MyModal.module.scss";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import ModalOverlay from "./ModalOverlay";
-import { useHistory } from "react-router-dom";
 
-const MyModal = ({ children, hideDefaultClose, modalClose }) => {
+const MyModal = ({ children, hideDefaultClose, modalClose, modalGoBack }) => {
   const modalRoot = document.getElementById("react-modals");
-  let history = useHistory();
 
-  const onClose = (e) => {
-    e.stopPropagation();
-    history.goBack();
+  const onClose = () => {
+    if (modalGoBack) {
+      modalGoBack();
+    }
+
     if (modalClose) {
       modalClose(false);
     }
@@ -56,8 +56,8 @@ const MyModal = ({ children, hideDefaultClose, modalClose }) => {
 
 MyModal.propTypes = {
   children: PropTypes.element,
-  visible: PropTypes.bool,
-  setVisible: PropTypes.func,
+  modalClose: PropTypes.func,
+  modalGoBack: PropTypes.func,
   hideDefaultClose: PropTypes.bool,
 };
 

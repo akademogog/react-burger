@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
-import { Switch, Route, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import React from "react";
+import { Switch, Route, useLocation, useHistory } from "react-router-dom";
 import MainPage from "../../pages/MainPage/MainPage";
 import LoginPage from "../../pages/LoginPage/LoginPage";
 import RegisterPage from "../../pages/RegisterPage/RegisterPage";
@@ -9,15 +8,18 @@ import ResetPassword from "../../pages/ResetPassword/ResetPassword";
 import ProfilePage from "../../pages/ProfilePage/ProfilePage";
 import { ProtectedRoute } from "../ProtectedRoute/ProtectedRoute";
 import Page404 from "../../pages/404/Page404";
-import { fetchIngredients } from "../../store/asyncActions/ingredients";
 import MyModal from "../MyModal/MyModal";
 import IngredientDetails from "../IngredientDetails/IngredientDetails";
 import IngridientPage from "../../pages/IngridientPage/IngridientPage";
 
 function SwitchRoutes() {
   const location = useLocation();
+  const history = useHistory();
 
   let background = location.state && location.state.background;
+  const modalGoBack = () => {
+    history.goBack();
+  };
 
   return (
     <div>
@@ -53,7 +55,7 @@ function SwitchRoutes() {
 
       {background && (
         <Route path="/ingredients/:id">
-          <MyModal>
+          <MyModal modalGoBack={modalGoBack}>
             <IngredientDetails />
           </MyModal>
         </Route>

@@ -13,12 +13,10 @@ function App() {
   }, []);
 
   return (
-    <div>
-      <Router>
-        <AppHeader />
-        <SwitchRoutes />
-      </Router>
-    </div>
+    <Router>
+      <AppHeader />
+      <SwitchRoutes />
+    </Router>
   );
 }
 
