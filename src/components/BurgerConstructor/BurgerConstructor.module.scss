@@ -9,18 +9,6 @@
   padding-left: 48px;
 }
 
-.constructorDragableElement {
-  padding-right: 16px;
-  padding-left: 16px;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  column-gap: 8px;
-  align-items: center;
-  &:last-child {
-    margin-bottom: 0px;
-  }
-}
-
 .constructorSumm {
   display: flex;
   align-items: center;
@@ -36,4 +24,16 @@
     width: 33px;
     height: 33px;
   }
+}
+
+.constructorElement, .constructorElementTextPreview {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.constructorMain {
+  padding-left: 48px;
+  padding-right: 16px;
 }

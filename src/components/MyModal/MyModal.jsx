@@ -1,28 +1,40 @@
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import React, { useEffect } from "react";
 import styles from "./MyModal.module.scss";
-import ReactDOM from 'react-dom'
+import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
+import ModalOverlay from "./ModalOverlay";
 
-const MyModal = ({ children, visible, setVisible, hideDefaultClose }) => {
-  const rootClasses = [styles.myModal];
+const MyModal = ({ children, hideDefaultClose, modalClose, modalGoBack }) => {
   const modalRoot = document.getElementById("react-modals");
 
-  if (visible) {
-    rootClasses.push(styles.active);
+  const onClose = () => {
+    if (modalGoBack) {
+      modalGoBack();
+    }
+
+    if (modalClose) {
+      modalClose(false);
+    }
   }
 
   useEffect(() => {
-    document.onkeydown = (evt) => {
-      evt = evt || window.event;
-      if (evt.keyCode === 27) {
-        setVisible(false);
+    function closeByEscape(evt) {
+      if (evt.key === "Escape") {
+        onClose();
       }
+    }
+    document.addEventListener("keydown", closeByEscape);
+    return () => {
+      document.removeEventListener("keydown", closeByEscape);
     };
-  }, [visible, setVisible]);
+  }, []);
+
+  if (!children) return null;
 
   return ReactDOM.createPortal(
-    <div className={rootClasses.join(" ")} onClick={() => setVisible(false)}>
+    <div className={`${styles.myModal} ${styles.active}`}>
+      <ModalOverlay onClose={onClose}/>
       <div
         className={styles.myModalContent}
         onClick={(e) => e.stopPropagation()}
@@ -30,12 +42,11 @@ const MyModal = ({ children, visible, setVisible, hideDefaultClose }) => {
         {!hideDefaultClose && (
           <div
             className={`${styles.closeButton}`}
-            onClick={() => setVisible(false)}
+            onClick={onClose}
           >
             <CloseIcon type="primary" />
           </div>
         )}
-
         {children}
       </div>
     </div>,
@@ -45,9 +56,9 @@ const MyModal = ({ children, visible, setVisible, hideDefaultClose }) => {
 
 MyModal.propTypes = {
   children: PropTypes.element,
-  visible: PropTypes.bool,
-  setVisible: PropTypes.func,
-  hideDefaultClose: PropTypes.bool
+  modalClose: PropTypes.func,
+  modalGoBack: PropTypes.func,
+  hideDefaultClose: PropTypes.bool,
 };
 
 export default MyModal;

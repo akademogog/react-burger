@@ -1,149 +1,265 @@
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useDrop } from "react-dnd";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Button,
   ConstructorElement,
   CurrencyIcon,
-  DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useMemo,
-  useCallback,
-} from "react";
-import PropTypes from "prop-types";
 import styles from "./BurgerConstructor.module.scss";
 import SimpleBar from "simplebar-react";
 import MyModal from "../MyModal/MyModal";
 import OrderDetails from "../OrderDetails/OrderDetails";
+import ConstructorDraggableIngredient from "../ConstructorDraggableIngredient/ConstructorDraggableIngredient";
+import { v4 as uuidv4 } from "uuid";
+import { fetchOrder } from "../../store/asyncActions/order";
+import { useHistory } from "react-router-dom";
+import { DEL_CONSTRUCTOR_INGREDIENTS, SET_CONSTRUCTOR_BUN, SET_CONSTRUCTOR_INGREDIENTS, SET_CONSTRUCTOR_PRICE, UPDATE_CONSTRUCTOR_INGREDIENTS } from "../../store/actions/burgerIngredientsActions";
 
-const BurgerConstructor = ({ ingredientCards }) => {
-  const [bun, setBun] = useState({});
-  const [heightTopScrollBlock, setHeightTopScrollBlock] = useState(0);
+const BurgerConstructor = () => {
+  const history = useHistory();
+  const { ingredients } = useSelector(
+    (store) => store.burgerIngredientsReduser
+  );
+  const constructorIngredients = useSelector(
+    (store) => store.constructorReduser.constructorIngredients
+  );
+  const constructorBun = useSelector(
+    (store) => store.constructorReduser.constructorBun
+  );
+  const totalConstructorPrice = useSelector(
+    (store) => store.constructorReduser.totalConstructorPrice
+  );
+  const order = useSelector((store) => store.modalOrderReduser);
+  const token = useSelector((store) => store.userReduser.accessToken);
+
   const [visibleModal, setVisibleModal] = useState(false);
-  
-  const scrollableNodeRef = useRef();
+  const [heightTopScrollBlock, setHeightTopScrollBlock] = useState(0);
 
-  useMemo(() => {
-    setBun(ingredientCards[0]);
-  }, [ingredientCards]);
+  const dispatch = useDispatch();
+  const scrollableNodeRef = useRef();
+  const constructorBottomBlock = useRef();
+
+  const [, dropTarget] = useDrop({
+    accept: "card",
+    drop(ingredient) {
+      if (ingredient["type"] === "Булка") {
+        dispatch({ type: SET_CONSTRUCTOR_BUN, ingredient });
+      } else {
+        dispatch({
+          type: SET_CONSTRUCTOR_INGREDIENTS,
+          ingredient: {
+            ...ingredient,
+            dragId: uuidv4(),
+          },
+        });
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (order.number) {
+      setVisibleModal(true);
+    }
+  }, [order]);
+
+  useEffect(() => {
+    setPrice();
+    // dispatch({ type: "UPDATE_INGREDIENTS", payload: countersSelected() });
+  }, [constructorBun, constructorIngredients]);
+
+  useEffect(() => {
+    if (constructorIngredients.length) {
+      getCurrentOffsetIngredientBlock();
+    }
+  }, [constructorIngredients]);
+
+  useEffect(() => {
+    window.addEventListener("resize", resizeIngredientBlock, true);
+  }, []);
+
+  // Отправляем заказ
+  const sendOrder = () => {
+    if (token) {
+      let orderId = constructorIngredients.map((ingr) => ingr._id);
+      orderId = [constructorBun._id, ...orderId, constructorBun._id];
+      dispatch(fetchOrder(orderId));
+    } else {
+      history.push("/login");
+    }
+  };
+
+  // Удаляем эллемент из конструктора
+  const handleClose = (curentIndex) => {
+    dispatch({ type: DEL_CONSTRUCTOR_INGREDIENTS, curentIndex });
+  };
 
   // Расчитываем и устанавливаем текущую высоту блока ингридиентов
   const getCurrentOffsetIngredientBlock = () => {
     const windowInnerHeight = window.innerHeight;
     const offsetTopScrollBlock =
       scrollableNodeRef.current.getBoundingClientRect().top;
-    const maxBlockHeigth = Math.floor(windowInnerHeight - offsetTopScrollBlock - 252)
+    const heigthConstructorBottomBlock =
+      constructorBottomBlock.current.offsetHeight;
+    const maxBlockHeigth = Math.floor(
+      windowInnerHeight - offsetTopScrollBlock - heigthConstructorBottomBlock
+    );
     if (maxBlockHeigth < 104) {
       setHeightTopScrollBlock(104);
       return;
     }
-  
+
     setHeightTopScrollBlock(maxBlockHeigth);
   };
 
   // Вызываем функцию при ресайзе
   const resizeIngredientBlock = useCallback(() => {
     getCurrentOffsetIngredientBlock();
-  }, []);  
-
-  useEffect(() => {
-    getCurrentOffsetIngredientBlock();
-    window.addEventListener("resize", resizeIngredientBlock, true);
   }, []);
+
+  const setPrice = () => {
+    let thisTotalSumm = 0;
+
+    for (const key in constructorIngredients) {
+      const element = constructorIngredients[key];
+      thisTotalSumm += element.price;
+    }
+
+    if (constructorBun) {
+      thisTotalSumm += constructorBun.price * 2;
+    }
+
+    dispatch({ type: SET_CONSTRUCTOR_PRICE, thisTotalSumm });
+  };
+
+  const moveCard = useCallback(
+    (dragIndex, hoverIndex) => {
+      const dragCard = constructorIngredients[dragIndex];
+      const newCards = [...constructorIngredients];
+      newCards.splice(dragIndex, 1);
+      newCards.splice(hoverIndex, 0, dragCard);
+      dispatch({
+        type: UPDATE_CONSTRUCTOR_INGREDIENTS,
+        ingredients: newCards,
+      });
+    },
+    [constructorIngredients, dispatch]
+  );
 
   return (
     <div className={`${styles.burgerConstructor} ml-10`}>
-      <div className={`${styles.constructorList} constructorList`}>
+      <div
+        className={`${styles.constructorList} constructorList`}
+        ref={dropTarget}
+      >
         <div className={`${styles.constructorBudTop}`}>
           <div className={`mb-4`}>
-            <ConstructorElement
-              type="top"
-              isLocked={true}
-              text={bun.name}
-              price={bun.price}
-              thumbnail={bun.image}
-            />
-          </div>
-        </div>
-        <div className={`${styles.constructorMain}`}>
-          <SimpleBar
-            style={{
-              maxHeight: `${heightTopScrollBlock}px`,
-            }}
-            autoHide={false}
-            scrollableNodeProps={{ ref: scrollableNodeRef }}
-          >
-            {ingredientCards.map(
-              (card) =>
-                card.type !== 'Булка' && (
-                  <div
-                    key={card._id}
-                    className={`${styles.constructorDragableElement} mb-4`}
-                  >
-                    <DragIcon type="primary" />
-                    <ConstructorElement
-                      text={card.name}
-                      price={card.price}
-                      thumbnail={card.image}
-                    />
-                  </div>
-                )
+            {constructorBun ? (
+              <ConstructorElement
+                type="top"
+                isLocked={true}
+                text={`${constructorBun["name"]} - верх`}
+                price={constructorBun["price"]}
+                thumbnail={constructorBun["image"]}
+              />
+            ) : (
+              <div className="constructor-element constructor-element_pos_top">
+                <span
+                  className={`constructor-element__text ${styles.constructorElementTextPreview}`}
+                >
+                  Перенесите сюда булку
+                </span>
+              </div>
             )}
-          </SimpleBar>
-        </div>
-        <div className={`${styles.constructorBudBottom}`}>
-          <div className="mt-4">
-            <ConstructorElement
-              type="bottom"
-              isLocked={true}
-              text={bun.name}
-              price={bun.price}
-              thumbnail={bun.image}
-            />
           </div>
         </div>
-        <div className={`${styles.constructorSumm} mt-10`}>
-          <div className={`${styles.constructorSummText} mr-10`}>
-            <span className="text text_type_main-large mr-2">610</span>
-            <CurrencyIcon type="primary" />
-          </div>
-          <Button
-            type="primary"
-            size="large"
-            onClick={() => {
-              setVisibleModal(true);
-            }}
-            htmlType='button'
-          >
-            Оформить заказ
-          </Button>
+        <div
+          className={`${
+            !constructorIngredients.length && styles.constructorMain
+          }`}
+        >
+          {constructorIngredients.length ? (
+            <SimpleBar
+              style={{
+                maxHeight: `${heightTopScrollBlock}px`,
+              }}
+              autoHide={false}
+              scrollableNodeProps={{ ref: scrollableNodeRef }}
+            >
+              {constructorIngredients.map(
+                (card, index) =>
+                  card.type !== "Булка" && (
+                    <ConstructorDraggableIngredient
+                      key={card.dragId}
+                      item={card}
+                      index={index}
+                      handleClose={handleClose}
+                      moveCard={moveCard}
+                    />
+                  )
+              )}
+            </SimpleBar>
+          ) : (
+            <div className={`constructor-element ${styles.constructorElement}`}>
+              <span
+                className={`constructor-element__text ${styles.constructorElementTextPreview}`}
+              >
+                А сюда перетяните ингредиенты
+              </span>
+            </div>
+          )}
         </div>
-        <MyModal visible={visibleModal} setVisible={setVisibleModal}>
-          <OrderDetails />
-        </MyModal>
+
+        <div ref={constructorBottomBlock} className="pt-4 pb-8">
+          <div className={`${styles.constructorBudBottom}`}>
+            <div>
+              {constructorBun ? (
+                <ConstructorElement
+                  type="bottom"
+                  isLocked={true}
+                  text={`${constructorBun["name"]} - низ`}
+                  price={constructorBun["price"]}
+                  thumbnail={constructorBun["image"]}
+                />
+              ) : (
+                <div className="constructor-element constructor-element_pos_bottom">
+                  <span
+                    className={`constructor-element__text ${styles.constructorElementTextPreview}`}
+                  >
+                    {"Или сюда :)"}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className={`${styles.constructorSumm} mt-10`}>
+            <div className={`${styles.constructorSummText} mr-10`}>
+              <span className="text text_type_main-large mr-2">
+                {totalConstructorPrice}
+              </span>
+              <CurrencyIcon type="primary" />
+            </div>
+            <Button
+              disabled={!constructorBun}
+              type="primary"
+              size="large"
+              onClick={sendOrder}
+              htmlType="button"
+            >
+              Оформить заказ
+            </Button>
+          </div>
+        </div>
+
+        {visibleModal && (
+          <MyModal modalClose={setVisibleModal}>
+            <OrderDetails />
+          </MyModal>
+        )}
       </div>
     </div>
   );
-};
-
-const ingredientCardPropTypes = PropTypes.shape({
-  _id: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
-  proteins: PropTypes.number.isRequired,
-  fat: PropTypes.number.isRequired,
-  carbohydrates: PropTypes.number.isRequired,
-  calories: PropTypes.number.isRequired,
-  price: PropTypes.number.isRequired,
-  image: PropTypes.string.isRequired,
-  image_mobile: PropTypes.string.isRequired,
-  image_large: PropTypes.string.isRequired,
-  __v: PropTypes.number,
-});
-
-BurgerConstructor.propTypes = {
-  ingredientCards: PropTypes.arrayOf(ingredientCardPropTypes).isRequired
 };
 
 export default BurgerConstructor;

@@ -1,22 +1,28 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
-import PropTypes from "prop-types";
+import { useSelector, useDispatch } from "react-redux";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 import IngredientCard from "../IngredientCard/IngredientCard.jsx";
 import IngredientBlock from "../IngredientBlock/IngredientBlock.jsx";
 import styles from "./BurgerIngredients.module.scss";
-import MyModal from "../MyModal/MyModal";
-import IngredientDetails from "../IngredientDetails/IngredientDetails.jsx";
+import { DEL_CURRENT_INGREDIENT } from "../../store/actions/burgerIngredientsActions.js";
 
-const BurgerIngredients = ({ ingredientCards }) => {
-  const returnType = ingredientCards.map(
-    (ingredientCard) => ingredientCard.type
+const BurgerIngredients = () => {
+  const { ingredients } = useSelector((store) => store.burgerIngredientsReduser);
+  const dispatch = useDispatch();
+
+  const constructorIngredients = useSelector(
+    (store) => store.constructorReduser.constructorIngredients
   );
+  const constructorBun = useSelector(
+    (store) => store.constructorReduser.constructorBun
+  );
+
+  const returnType = ingredients.map((ingredientCard) => ingredientCard.type);
   const uniqTypes = [...new Set(returnType)];
 
   const [visibleModal, setVisibleModal] = useState(false);
-  const [modalProps, setModalProps] = useState({});
   const [offsetTopScrollBlock, setOffsetTopScrollBlock] = useState(0);
   const [navChange, setNavChange] = useState({
     clickedBlock: uniqTypes[0],
@@ -24,26 +30,27 @@ const BurgerIngredients = ({ ingredientCards }) => {
     currentEvent: "",
   });
 
+  useEffect(() => {
+    if (!visibleModal) {
+      dispatch({ type: DEL_CURRENT_INGREDIENT });
+    }
+  }, [visibleModal])
+  
+  useEffect(() => {
+    countersSelected();
+  }, [constructorIngredients, constructorBun])
+
   const scrollableNodeRef = useRef();
   const ingredientBlockRef = useRef([]);
 
   useMemo(() => {
     ingredientBlockRef.current = [];
-  }, [ingredientCards]);
+  }, [ingredients]);
 
   const addToBlockRefs = (el) => {
     if (el && !ingredientBlockRef.current.includes(el)) {
       ingredientBlockRef.current.push(el);
     }
-  };
-
-  const openModal = (ingredientCard) => {
-    setModalProps(ingredientCard);
-    setVisibleModal(true);
-  };
-
-  const closeModal = () => {
-    setVisibleModal(false);
   };
 
   // устанавливает высоту блока ингридиентов
@@ -93,8 +100,11 @@ const BurgerIngredients = ({ ingredientCards }) => {
 
   // Меняем активный таб при клике
   const changeActiveTabClicked = (e) => {
-    scrollableNodeRef.current.removeEventListener("scroll", eventListenerFunction);
-    setNavChange({ ...navChange, clickedBlock: e, currentEvent: "clicked"});
+    scrollableNodeRef.current.removeEventListener(
+      "scroll",
+      eventListenerFunction
+    );
+    setNavChange({ ...navChange, clickedBlock: e, currentEvent: "clicked" });
   };
 
   // скрол к блокам ингридиента при нажатии на табы
@@ -120,6 +130,21 @@ const BurgerIngredients = ({ ingredientCards }) => {
     changeActiveTabScrolled();
   }, [navChange.scrolledBlock]);
 
+
+  const countersSelected = () => {
+    let ingredientCounters = constructorIngredients.map(ingredient => {
+      const ingredientId = ingredient._id;
+      return ingredientId;
+    })
+
+    if (constructorBun) {
+      const ingredientId = constructorBun._id;
+      ingredientCounters.push(ingredientId)
+    }
+
+    return ingredientCounters;
+  }
+
   return (
     <>
       <div className={`${styles.burgerIngredients} mt-5`}>
@@ -133,9 +158,7 @@ const BurgerIngredients = ({ ingredientCards }) => {
                 (navChange.scrolledBlock === uniqType &&
                   navChange.currentEvent === "scrolled")
               }
-              onClick={
-                changeActiveTabClicked
-              }
+              onClick={changeActiveTabClicked}
               key={uniqType}
             >
               {uniqType}
@@ -155,51 +178,40 @@ const BurgerIngredients = ({ ingredientCards }) => {
               uniqType={uniqType}
               ref={addToBlockRefs}
             >
-              {ingredientCards.map(
-                (ingredientCard) =>
-                  ingredientCard.type === uniqType && (
-                    <IngredientCard
-                      key={ingredientCard._id}
-                      ingredientCard={ingredientCard}
-                      openModal={openModal}
-                    />
-                  )
+              {ingredients.map(
+                (ingredientCard) => {
+                  let total = 0;
+                  let selected = countersSelected();
+
+                  for (let i = 0; i < selected.length; i++) {
+                    const element = selected[i];
+
+                    if ( ingredientCard._id === element ) {
+                      total++;
+
+                      if ( ingredientCard.type === 'Булка') {
+                        total++;
+                      }
+                    }
+                  }
+                  
+                  if (ingredientCard.type === uniqType) {
+                    return (
+                      <IngredientCard
+                        key={ingredientCard._id}
+                        ingredientCard={ingredientCard}
+                        total={total}
+                      />
+                    )
+                  }
+                }
               )}
             </IngredientBlock>
           ))}
         </SimpleBar>
       </div>
-      <MyModal
-        visible={visibleModal}
-        setVisible={setVisibleModal}
-        hideDefaultClose={true}
-      >
-        <IngredientDetails
-          ingredientCard={modalProps}
-          closeModal={closeModal}
-        />
-      </MyModal>
     </>
   );
-};
-
-const ingredientCardPropTypes = PropTypes.shape({
-  _id: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
-  proteins: PropTypes.number.isRequired,
-  fat: PropTypes.number.isRequired,
-  carbohydrates: PropTypes.number.isRequired,
-  calories: PropTypes.number.isRequired,
-  price: PropTypes.number.isRequired,
-  image: PropTypes.string.isRequired,
-  image_mobile: PropTypes.string.isRequired,
-  image_large: PropTypes.string.isRequired,
-  __v: PropTypes.number,
-});
-
-BurgerIngredients.propTypes = {
-  ingredientCards: PropTypes.arrayOf(ingredientCardPropTypes).isRequired,
 };
 
 export default BurgerIngredients;
