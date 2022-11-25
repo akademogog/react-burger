@@ -1,6 +1,6 @@
 import {
   SET_ORDER_NUMBER
-} from "../actions/burgerIngredientsActions";
+} from "../actions/burgerIngredientsActions.js";
 
 const modalOrderState = {
   number: null,

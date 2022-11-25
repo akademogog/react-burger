@@ -5,7 +5,7 @@ import {
   USER_TOKEN,
   GET_USER,
   PATCH_USER
-} from "../actions/userActions";
+} from "../actions/userActions.js";
 
 const userState = {
   accessToken: null,

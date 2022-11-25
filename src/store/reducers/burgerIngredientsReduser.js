@@ -3,7 +3,7 @@ import {
   LOAD_INGREDIENTS_SUCCESS,
   LOAD_INGREDIENTS_ERROR,
   UPDATE_INGREDIENTS
-} from "../actions/burgerIngredientsActions";
+} from "../actions/burgerIngredientsActions.js";
 
 const burgerIngredientsState = {
   isLoading: false,

@@ -1,7 +1,7 @@
 import {
   SET_CURRENT_INGREDIENT,
   DEL_CURRENT_INGREDIENT
-} from "../actions/burgerIngredientsActions";
+} from "../actions/burgerIngredientsActions.js";
 
 const modalIngredientState = {
   currentIngredient: null,

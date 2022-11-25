@@ -1,5 +1,5 @@
 import { ORDERS_URL } from "../../utils/constants";
-import { request } from "../../utils/request.js";
+import { request } from "../../utils/request";
 import { setOrderNumber } from "../reducers/modalOrderReduser.js";
 
 export const fetchOrder = (ingredientsID) => {

@@ -4,11 +4,11 @@ import {
   DEL_CONSTRUCTOR_INGREDIENTS,
   SET_CONSTRUCTOR_BUN,
   SET_CONSTRUCTOR_PRICE,
-} from "../actions/burgerIngredientsActions";
+} from "../actions/burgerIngredientsActions.js";
 
 const constructorState = {
   constructorIngredients: [],
-  constructorBun: null,
+  constructorBun: '',
   totalConstructorPrice: 0,
 };
 
