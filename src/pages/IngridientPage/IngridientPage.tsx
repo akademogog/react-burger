@@ -11,7 +11,7 @@ const IngridientPage = () => {
   const { ingredients } = useSelector(
     (store: TState) => store.burgerIngredientsReduser
   );
-  const [currentIngredient, setCurrentIngredient] = useState<IIngredientItem>({});
+  const [currentIngredient, setCurrentIngredient] = useState<IIngredientItem | null>(null);
 
   useEffect(() => {
     if (ingredients.length) {
@@ -25,14 +25,14 @@ const IngridientPage = () => {
         <h2 className={`text text_type_main-large`}>Детали ингредиента</h2>
       </div>
       <img
-        src={currentIngredient.image_large}
-        alt={currentIngredient.name}
+        src={currentIngredient?.image_large}
+        alt={currentIngredient?.name}
         className={`${styles.ingredientImage} mb-4`}
       />
       <h3
         className={`${styles.ingredientName} mb-8 text text_type_main-medium`}
       >
-        {currentIngredient.name}
+        {currentIngredient?.name}
       </h3>
       <div className={`${styles.energyValueContainer}`}>
         <div className={`${styles.energyValueBlock}`}>
@@ -40,7 +40,7 @@ const IngridientPage = () => {
             Калории,ккал
           </span>
           <span className="text text_type_digits-default text_color_inactive">
-            {currentIngredient.calories}
+            {currentIngredient?.calories}
           </span>
         </div>
         <div className={`${styles.energyValueBlock}`}>
@@ -48,7 +48,7 @@ const IngridientPage = () => {
             Белки, г
           </span>
           <span className="text text_type_digits-default text_color_inactive">
-            {currentIngredient.proteins}
+            {currentIngredient?.proteins}
           </span>
         </div>
         <div className={`${styles.energyValueBlock}`}>
@@ -56,7 +56,7 @@ const IngridientPage = () => {
             Жиры, г
           </span>
           <span className="text text_type_digits-default text_color_inactive">
-            {currentIngredient.fat}
+            {currentIngredient?.fat}
           </span>
         </div>
         <div className={`${styles.energyValueBlock}`}>
@@ -64,7 +64,7 @@ const IngridientPage = () => {
             Углеводы, г
           </span>
           <span className="text text_type_digits-default text_color_inactive">
-            {currentIngredient.carbohydrates}
+            {currentIngredient?.carbohydrates}
           </span>
         </div>
       </div>

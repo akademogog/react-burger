@@ -8,9 +8,10 @@ import IngredientBlock from "../IngredientBlock/IngredientBlock";
 import styles from "./BurgerIngredients.module.scss";
 import { DEL_CURRENT_INGREDIENT } from "../../store/actions/burgerIngredientsActions";
 import { TState } from "../../store/rootReduser";
+import { IIngredientItem } from "../../utils/types";
 
 const BurgerIngredients = () => {
-  const { ingredients } = useSelector((store: TState) => store.burgerIngredientsReduser);
+  const ingredients = useSelector<TState, IIngredientItem[]>((store) => store.burgerIngredientsReduser.ingredients);
   const dispatch = useDispatch();
 
   const constructorIngredients = useSelector(
@@ -21,7 +22,7 @@ const BurgerIngredients = () => {
   );
 
   const returnType = ingredients.map((ingredientCard) => ingredientCard.type);
-  const uniqTypes: any[] = [...new Set(returnType)];
+  const uniqTypes: string[] = [...new Set(returnType)];
 
   type TnavChange = {
     clickedBlock: string,
@@ -68,9 +69,9 @@ const BurgerIngredients = () => {
 
   const eventListenerFunction = () => {
     if (scrollableNodeRef) {
-      const currentHeightIngredient = scrollableNodeRef?.current?.children[0].offsetHeight;
-      const currentHeightScrollBlock = scrollableNodeRef?.current?.offsetHeight;
-      const curentScrollTop = scrollableNodeRef?.current?.scrollTop;
+      const currentHeightIngredient = scrollableNodeRef.current.children[0].offsetHeight;
+      const currentHeightScrollBlock = scrollableNodeRef.current.offsetHeight;
+      const curentScrollTop = scrollableNodeRef.current.scrollTop;
 
       ingredientBlockRef.current.find((e, index) => {
         if (curentScrollTop >= e.offsetTop) {

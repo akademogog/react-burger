@@ -98,10 +98,10 @@ const BurgerConstructor = () => {
   // Расчитываем и устанавливаем текущую высоту блока ингридиентов
   const getCurrentOffsetIngredientBlock = () => {
     const windowInnerHeight = window.innerHeight;
-    const offsetTopScrollBlock: any =
-      scrollableNodeRef?.current?.getBoundingClientRect().top;
-    const heigthConstructorBottomBlock: any =
-      constructorBottomBlock?.current?.offsetHeight;
+    const offsetTopScrollBlock: number =
+      scrollableNodeRef?.current?.getBoundingClientRect().top || 0;
+    const heigthConstructorBottomBlock: number =
+      constructorBottomBlock?.current?.offsetHeight || 0;
     const maxBlockHeigth = Math.floor(
       windowInnerHeight - offsetTopScrollBlock - heigthConstructorBottomBlock
     );
