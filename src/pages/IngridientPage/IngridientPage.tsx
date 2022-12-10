@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
 import styles from "./IngridientPage.module.scss";
-import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { IIngredientItem } from "../../utils/types";
-import { TState } from "../../store/rootReduser";
-
+import { IDrgagItem } from "../../utils/types";
+import { useAppSelector } from "../../hooks/hooks";
 
 const IngridientPage = () => {
   const thisId = useParams();
-  const { ingredients } = useSelector(
-    (store: TState) => store.burgerIngredientsReduser
+  const ingredients = useAppSelector(
+    (store) => store.burgerIngredientsReduser.ingredients
   );
-  const [currentIngredient, setCurrentIngredient] = useState<IIngredientItem | null>(null);
+  const [currentIngredient, setCurrentIngredient] =
+    useState<IDrgagItem>();
 
   useEffect(() => {
     if (ingredients.length) {

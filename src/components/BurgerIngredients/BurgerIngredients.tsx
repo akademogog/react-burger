@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
@@ -7,18 +6,17 @@ import IngredientCard from "../IngredientCard/IngredientCard";
 import IngredientBlock from "../IngredientBlock/IngredientBlock";
 import styles from "./BurgerIngredients.module.scss";
 import { DEL_CURRENT_INGREDIENT } from "../../store/actions/burgerIngredientsActions";
-import { TState } from "../../store/rootReduser";
-import { IIngredientItem } from "../../utils/types";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 
 const BurgerIngredients = () => {
-  const ingredients = useSelector<TState, IIngredientItem[]>((store) => store.burgerIngredientsReduser.ingredients);
-  const dispatch = useDispatch();
+  const ingredients = useAppSelector((store) => store.burgerIngredientsReduser.ingredients);
+  const dispatch = useAppDispatch();
 
-  const constructorIngredients = useSelector(
-    (store: TState) => store.constructorReduser.constructorIngredients
+  const constructorIngredients = useAppSelector(
+    (store) => store.constructorReduser.constructorIngredients
   );
-  const constructorBun = useSelector(
-    (store: TState) => store.constructorReduser.constructorBun
+  const constructorBun = useAppSelector(
+    (store) => store.constructorReduser.constructorBun
   );
 
   const returnType = ingredients.map((ingredientCard) => ingredientCard.type);

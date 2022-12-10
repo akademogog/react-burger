@@ -1,12 +1,13 @@
 import { INGREDIENTS_URL, INGREDIENT_TYPE } from "../../utils/constants";
 import { request } from "../../utils/request";
-import { loadIngredientsRequest, loadIngredientsSuccess, loadIngredientsError } from "../reducers/burgerIngredientsReduser";
+import { AppDispatch, AppThunk } from "../../utils/types";
+import { loadIngredientsRequest, loadIngredientsSuccess, loadIngredientsError } from "../actions/burgerIngredientsActions";
 
-export const fetchIngredients = () => {
-  return (dispatch) => {
+export const fetchIngredients: AppThunk = () => {
+  return (dispatch: AppDispatch) => {
     dispatch(loadIngredientsRequest(true));
     request(INGREDIENTS_URL)
-      .then((responseResult) => {
+      .then((responseResult: any) => {
         const responseResultData = responseResult.data;
 
         if (INGREDIENT_TYPE) {

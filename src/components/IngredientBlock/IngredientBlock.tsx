@@ -1,6 +1,5 @@
-import React, { FC } from "react";
+import React from "react";
 import styles from "./IngredientBlock.module.scss";
-import PropTypes from "prop-types";
 
 interface IIngredientBlock {
   uniqType?: string;

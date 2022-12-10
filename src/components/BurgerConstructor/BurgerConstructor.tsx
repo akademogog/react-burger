@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useDrop } from "react-dnd";
-import { useSelector, useDispatch } from "react-redux";
 import {
   Button,
   ConstructorElement,
@@ -14,31 +13,37 @@ import ConstructorDraggableIngredient from "../ConstructorDraggableIngredient/Co
 import { v4 as uuidv4 } from "uuid";
 import { fetchOrder } from "../../store/asyncActions/order";
 import { useHistory } from "react-router-dom";
-import { DEL_CONSTRUCTOR_INGREDIENTS, SET_CONSTRUCTOR_BUN, SET_CONSTRUCTOR_INGREDIENTS, SET_CONSTRUCTOR_PRICE, UPDATE_CONSTRUCTOR_INGREDIENTS } from "../../store/actions/burgerIngredientsActions";
+import {
+  DEL_CONSTRUCTOR_INGREDIENTS,
+  SET_CONSTRUCTOR_BUN,
+  SET_CONSTRUCTOR_INGREDIENTS,
+  SET_CONSTRUCTOR_PRICE,
+  UPDATE_CONSTRUCTOR_INGREDIENTS,
+} from "../../store/actions/burgerIngredientsActions";
 import { IDrgagItem, IIngredientItem } from "../../utils/types";
-import { TState } from "../../store/rootReduser";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 
 const BurgerConstructor = () => {
   const history = useHistory();
-  const { ingredients } = useSelector(
-    (store: TState) => store.burgerIngredientsReduser
+  const ingredients = useAppSelector(
+    (store) => store.burgerIngredientsReduser.ingredients
   );
-  const constructorIngredients = useSelector(
-    (store: TState) => store.constructorReduser.constructorIngredients
+  const constructorIngredients = useAppSelector(
+    (store) => store.constructorReduser.constructorIngredients
   );
-  const constructorBun = useSelector(
-    (store: TState) => store.constructorReduser.constructorBun
+  const constructorBun = useAppSelector(
+    (store) => store.constructorReduser.constructorBun
   );
-  const totalConstructorPrice = useSelector(
-    (store: TState) => store.constructorReduser.totalConstructorPrice
+  const totalConstructorPrice = useAppSelector(
+    (store) => store.constructorReduser.totalConstructorPrice
   );
-  const order = useSelector((store: TState) => store.modalOrderReduser);
-  const token = useSelector((store: TState) => store.userReduser.accessToken);
+  const order = useAppSelector((store) => store.modalOrderReduser);
+  const token = useAppSelector((store) => store.userReduser.accessToken);
 
   const [visibleModal, setVisibleModal] = useState<boolean>(false);
   const [heightTopScrollBlock, setHeightTopScrollBlock] = useState<number>(0);
 
-  const dispatch: Function = useDispatch();
+  const dispatch = useAppDispatch();
   const scrollableNodeRef = useRef<HTMLDivElement>(null);
   const constructorBottomBlock = useRef<HTMLDivElement>(null);
 
@@ -46,7 +51,8 @@ const BurgerConstructor = () => {
     accept: "card",
     drop(ingredient: IIngredientItem) {
       if (ingredient["type"] === "Булка") {
-        dispatch({ type: SET_CONSTRUCTOR_BUN, ingredient });
+        const constructorBun = ingredient;
+        dispatch({ type: SET_CONSTRUCTOR_BUN, constructorBun });
       } else {
         dispatch({
           type: SET_CONSTRUCTOR_INGREDIENTS,
@@ -83,8 +89,8 @@ const BurgerConstructor = () => {
   const sendOrder = () => {
     if (token) {
       let orderId = constructorIngredients.map((ingr) => ingr._id);
-      orderId = [constructorBun._id, ...orderId, constructorBun._id];
-      dispatch(fetchOrder(orderId));
+      orderId = [constructorBun!._id, ...orderId, constructorBun!._id];
+      dispatch(fetchOrder(orderId, token));
     } else {
       history.push("/login");
     }

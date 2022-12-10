@@ -1,18 +1,26 @@
+import { IDrgagItem, IIngredientItem } from '../../utils/types';
+import type { TBurgerIngredientsActions } from '../actions/burgerIngredientsActions';
 import {
   SET_CONSTRUCTOR_INGREDIENTS,
   UPDATE_CONSTRUCTOR_INGREDIENTS,
   DEL_CONSTRUCTOR_INGREDIENTS,
   SET_CONSTRUCTOR_BUN,
   SET_CONSTRUCTOR_PRICE,
-} from "../actions/burgerIngredientsActions.js";
+} from "../actions/burgerIngredientsActions";
 
-const constructorState = {
+type TConstructorState = {
+  constructorIngredients: IDrgagItem[],
+  constructorBun: IIngredientItem | null,
+  totalConstructorPrice: number,
+};
+
+const constructorState: TConstructorState = {
   constructorIngredients: [],
-  constructorBun: '',
+  constructorBun: null,
   totalConstructorPrice: 0,
 };
 
-export const constructorReduser = (state = constructorState, action) => {
+export const constructorReduser = (state = constructorState, action: TBurgerIngredientsActions) => {
   switch (action.type) {
     case SET_CONSTRUCTOR_INGREDIENTS: {
       return {
@@ -40,7 +48,7 @@ export const constructorReduser = (state = constructorState, action) => {
     case SET_CONSTRUCTOR_BUN: {
       return {
         ...state,
-        constructorBun: action.ingredient,
+        constructorBun: action.constructorBun,
       };
     }
     case SET_CONSTRUCTOR_PRICE: {

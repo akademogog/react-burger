@@ -1,8 +1,12 @@
 import {
-  SET_ORDER_NUMBER
-} from "../actions/burgerIngredientsActions.js";
+  SET_ORDER_NUMBER,
+} from "../actions/burgerIngredientsActions";
 
-const modalOrderState = {
+type TModalOrderState = {
+  number: number | null,
+};
+
+const modalOrderState: TModalOrderState = {
   number: null,
 };
 
@@ -11,15 +15,10 @@ export const modalOrderReduser = (state = modalOrderState, action) => {
     case SET_ORDER_NUMBER: {
       return {
         ...state,
-        number: action.payload,
+        number: action.number,
       };
     }
     default:
       return state;
   }
 };
-
-export const setOrderNumber = (payload) => ({
-  type: SET_ORDER_NUMBER,
-  payload,
-});

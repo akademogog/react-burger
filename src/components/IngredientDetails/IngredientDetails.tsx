@@ -1,17 +1,15 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../hooks/hooks";
 import styles from "./IngredientDetails.module.scss";
 import { useParams } from "react-router-dom";
-import { TState } from "../../store/rootReduser";
-import { IIngredientItem } from "../../utils/types";
 
 const IngredientDetails = () => {
-  const { ingredients } = useSelector((store: TState) => store.burgerIngredientsReduser);
+  const ingredients = useAppSelector((store) => store.burgerIngredientsReduser.ingredients);
   let { id } = useParams();
-  const currentIngredient: IIngredientItem = ingredients.find(el => el._id === id);
+  const currentIngredient = ingredients.find(el => el._id === id);
 
   return (
-    currentIngredient &&
+    currentIngredient ?
     <div className={`${styles.ingredientModal}`}>
       <div className={`${styles.titleBlock}`}>
         <h2 className={`${styles.titleBlock} text text_type_main-large`}>
@@ -63,6 +61,7 @@ const IngredientDetails = () => {
         </div>
       </div>
     </div>
+    : null
   );
 };
 

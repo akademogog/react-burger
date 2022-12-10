@@ -15,9 +15,11 @@ const AppHeader = () => {
             </IconButton>
           </NavLink>
 
-          <IconButton text='Лента заказов'>
-            <ListIcon type="secondary" />
-          </IconButton>
+          <NavLink to="/feed" activeClassName={styles.active} exact={true}>
+            <IconButton text='Лента заказов'>
+              <ListIcon type="secondary" />
+            </IconButton>
+          </NavLink>
         </div>
 
         <div className={`${styles.headerBlockCenter}`}>

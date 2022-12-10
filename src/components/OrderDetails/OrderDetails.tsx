@@ -1,11 +1,10 @@
 import React from "react";
 import Done from "../../image/done.svg";
 import styles from "./OrderDetails.module.scss";
-import { useSelector } from "react-redux";
-import { TState } from "../../store/rootReduser";
+import { useAppSelector } from "../../hooks/hooks";
 
 const OrderDetails = () => {
-  const number = useSelector((store: TState) => store.modalOrderReduser.number);
+  const number = useAppSelector((store) => store.modalOrderReduser.number);
   
   return (
     <div className={`${styles.orderAcceptedBlock}`}>

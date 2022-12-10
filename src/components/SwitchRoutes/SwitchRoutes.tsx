@@ -6,11 +6,16 @@ import RegisterPage from "../../pages/RegisterPage/RegisterPage";
 import ForgotPassword from "../../pages/ForgotPassword/ForgotPassword";
 import ResetPassword from "../../pages/ResetPassword/ResetPassword";
 import ProfilePage from "../../pages/ProfilePage/ProfilePage";
+import OrdersPage from "../../pages/OrdersPage/OrdersPage";
+import OrderPage from "../../pages/OrderPage/OrderPage";
+import FeedPage from "../../pages/FeedPage/FeedPage";
 import { ProtectedRoute } from "../ProtectedRoute/ProtectedRoute";
 import Page404 from "../../pages/404/Page404";
 import MyModal from "../MyModal/MyModal";
 import IngredientDetails from "../IngredientDetails/IngredientDetails";
 import IngridientPage from "../../pages/IngridientPage/IngridientPage";
+import OrderBlock from "../OrderBlock/OrderBlock";
+import OrderDetail from "../OrderDetail/OrderDetail";
 
 function SwitchRoutes() {
   const location = useLocation();
@@ -46,7 +51,16 @@ function SwitchRoutes() {
           <ProfilePage />
         </ProtectedRoute>
         <ProtectedRoute path="/profile/orders" exact={true}>
-          <ProfilePage />
+          <OrdersPage />
+        </ProtectedRoute>
+        <ProtectedRoute path="/profile/orders/:id" exact={true}>
+          <OrderPage />
+        </ProtectedRoute>
+        <ProtectedRoute path="/feed" exact={true}>
+          <FeedPage />
+        </ProtectedRoute>
+        <ProtectedRoute path="/feed/:id" exact={true}>
+          <OrderPage />
         </ProtectedRoute>
         <Route path="*">
           <Page404 />
@@ -54,11 +68,23 @@ function SwitchRoutes() {
       </Switch>
 
       {background && (
-        <Route path="/ingredients/:id">
-          <MyModal modalGoBack={modalGoBack}>
-            <IngredientDetails />
-          </MyModal>
-        </Route>
+        <Switch>
+          <Route path="/ingredients/:id">
+            <MyModal modalGoBack={modalGoBack}>
+              <IngredientDetails />
+            </MyModal>
+          </Route>
+          <Route path="/profile/orders/:id">
+            <MyModal modalGoBack={modalGoBack}>
+              <OrderDetail />
+            </MyModal>
+          </Route>
+          <Route path="/feed/:id">
+            <MyModal modalGoBack={modalGoBack}>
+              <OrderDetail />
+            </MyModal>
+          </Route>
+        </Switch>
       )}
     </div>
   );

@@ -1,3 +1,25 @@
+import { Action, ActionCreator } from 'redux';
+import { ThunkAction } from 'redux-thunk';
+import { store } from '../store/store';
+import { TBurgerIngredientsActions } from '../store/actions/burgerIngredientsActions';
+import { TUserActions } from '../store/actions/userActions';
+import { IGetFeed } from '../store/actions/feedActions';
+
+export type RootState = ReturnType<typeof store.getState>;
+
+// Типизация всех экшенов приложения
+export type TApplicationActions = 
+  | TUserActions
+  | TBurgerIngredientsActions
+  | IGetFeed;
+
+export type AppThunk<TReturn = void> = ActionCreator<
+  ThunkAction<TReturn, Action, RootState, TApplicationActions>
+>;
+
+// Типизация метода dispatch для проверки на валидность отправляемого экшена
+export type AppDispatch = typeof store.dispatch;
+
 export interface IIngredientItem {
   _id: string;
   name: string;
@@ -27,12 +49,6 @@ export type TburgerIngredientsState = {
   isLoading: boolean;
   isError: boolean;
   ingredients: IIngredientItem[];
-};
-
-export type TconstructorState = {
-  constructorIngredients: IDrgagItem[];
-  constructorBun: string;
-  totalConstructorPrice: number;
 };
 
 export type TmodalIngredientState = {
