@@ -14,7 +14,6 @@ import Page404 from "../../pages/404/Page404";
 import MyModal from "../MyModal/MyModal";
 import IngredientDetails from "../IngredientDetails/IngredientDetails";
 import IngridientPage from "../../pages/IngridientPage/IngridientPage";
-import OrderBlock from "../OrderBlock/OrderBlock";
 import OrderDetail from "../OrderDetail/OrderDetail";
 
 function SwitchRoutes() {

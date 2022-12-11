@@ -1,9 +1,10 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState, FC } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { Route, Redirect } from "react-router-dom";
 import { fetchToken } from "../../store/asyncActions/userAuth";
+import RouteProps from 'react-router-dom';
 
-export function ProtectedRoute({ children, ...rest }) {
+export const ProtectedRoute: FC<RouteProps> = ({ children, ...rest }) => {
   const dispatch: Function = useAppDispatch();
   const token = useAppSelector((store) => store.userReduser.accessToken);
   const [isUserLoaded, setUserLoaded] = useState<boolean>(false);
