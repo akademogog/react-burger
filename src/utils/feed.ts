@@ -2,14 +2,15 @@ export const getDate = (currentFeed, setTimeString) => {
   const orderDate = new Date(currentFeed.createdAt);
   const currentDate = new Date();
   const timeZone = orderDate.getTimezoneOffset()/60;
+  const days = Math.round(currentDate.getTime() / (24 * 60 * 60000)) - Math.round(orderDate.getTime() / (24 * 60 * 60000));
   let dateString = '';
   const getTimeString = `${orderDate.getHours()}:${orderDate.getMinutes()} i-GMT ${timeZone}`;
-  if (Math.abs(currentDate.getDate() - orderDate.getDate()) === 0) {
+  if (days === 0) {
     dateString = `Сегодня, ${getTimeString}`
-  } else if (Math.abs(currentDate.getDate() - orderDate.getDate()) === 1) {
+  } else if (days === 1) {
     dateString = `Вчера, ${getTimeString}`
   } else {
-    dateString = `${Math.abs(currentDate.getDate() - orderDate.getDate())} дня назад, ${getTimeString}`
+    dateString = `${days} дня назад, ${getTimeString}`
   }
   setTimeString(dateString);
 }
