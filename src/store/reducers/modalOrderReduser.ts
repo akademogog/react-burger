@@ -1,13 +1,17 @@
 import {
   SET_ORDER_NUMBER,
+  SEND_ORDER_SUCCESS,
+  SEND_ORDER,
 } from "../actions/burgerIngredientsActions";
 
 type TModalOrderState = {
   number: number | null,
+  isLoad: boolean,
 };
 
 const modalOrderState: TModalOrderState = {
   number: null,
+  isLoad: false,
 };
 
 export const modalOrderReduser = (state = modalOrderState, action) => {
@@ -16,6 +20,19 @@ export const modalOrderReduser = (state = modalOrderState, action) => {
       return {
         ...state,
         number: action.number,
+      };
+    }
+    case SEND_ORDER: {
+      return {
+        ...state,
+        isLoad: true,
+        number: null,
+      };
+    }
+    case SEND_ORDER_SUCCESS: {
+      return {
+        ...state,
+        isLoad: false,
       };
     }
     default:
