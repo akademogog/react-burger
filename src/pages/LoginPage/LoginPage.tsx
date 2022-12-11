@@ -5,19 +5,18 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link, Redirect, useLocation } from "react-router-dom";
 import styles from "./LoginPage.module.scss";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { fetchLogin, fetchToken } from "../../store/asyncActions/userAuth";
 import { useForm } from "../../hooks/useForm";
-import { TState } from "../../store/rootReduser";
 
 const LoginPage = () => {
   const location = useLocation();
-  const dispatch: Function = useDispatch();
-  const token = useSelector((store: TState) => store.userReduser.accessToken);
+  const dispatch = useAppDispatch();
+  const token = useAppSelector((store) => store.userReduser.accessToken);
 
   const { values, handleChange } = useForm({});
 
-  const login = (e) => {
+  const login = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(fetchLogin(values));
   };

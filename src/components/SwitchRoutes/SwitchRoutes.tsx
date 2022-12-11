@@ -56,12 +56,12 @@ function SwitchRoutes() {
         <ProtectedRoute path="/profile/orders/:id" exact={true}>
           <OrderPage />
         </ProtectedRoute>
-        <ProtectedRoute path="/feed" exact={true}>
+        <Route path="/feed" exact={true}>
           <FeedPage />
-        </ProtectedRoute>
-        <ProtectedRoute path="/feed/:id" exact={true}>
+        </Route>
+        <Route path="/feed/:id" exact={true}>
           <OrderPage />
-        </ProtectedRoute>
+        </Route>
         <Route path="*">
           <Page404 />
         </Route>
@@ -74,11 +74,11 @@ function SwitchRoutes() {
               <IngredientDetails />
             </MyModal>
           </Route>
-          <Route path="/profile/orders/:id">
+          <ProtectedRoute path="/profile/orders/:id">
             <MyModal modalGoBack={modalGoBack}>
               <OrderDetail />
             </MyModal>
-          </Route>
+          </ProtectedRoute>
           <Route path="/feed/:id">
             <MyModal modalGoBack={modalGoBack}>
               <OrderDetail />

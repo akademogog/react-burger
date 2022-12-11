@@ -4,12 +4,12 @@ export const getDate = (currentFeed, setTimeString) => {
   const timeZone = orderDate.getTimezoneOffset()/60;
   let dateString = '';
   const getTimeString = `${orderDate.getHours()}:${orderDate.getMinutes()} i-GMT ${timeZone}`;
-  if ((currentDate.getDate() - orderDate.getDate()) === 0) {
+  if (Math.abs(currentDate.getDate() - orderDate.getDate()) === 0) {
     dateString = `Сегодня, ${getTimeString}`
-  } else if ((currentDate.getDate() - orderDate.getDate()) === 1) {
+  } else if (Math.abs(currentDate.getDate() - orderDate.getDate()) === 1) {
     dateString = `Вчера, ${getTimeString}`
   } else {
-    dateString = `${(currentDate.getDate() - orderDate.getDate())} дня назад, ${getTimeString}`
+    dateString = `${Math.abs(currentDate.getDate() - orderDate.getDate())} дня назад, ${getTimeString}`
   }
   setTimeString(dateString);
 }

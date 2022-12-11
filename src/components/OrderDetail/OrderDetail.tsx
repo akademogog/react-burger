@@ -28,7 +28,7 @@ type TElCount = {
 
 const OrderDetail: any = () => {
   let { id } = useParams();  
-  const currentFeed = useAppSelector((store) => store.feedReduser.payload?.orders.find(el => el.number == id));
+  const currentFeed = useAppSelector((store) => store.wsReducer.messages?.orders.find(el => el.number == id));
   const ingredients = useAppSelector((store) => store.burgerIngredientsReduser.ingredients)
   const [sortedIngredients, setSortedIngredients] = useState<TElCount[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>();

@@ -8,7 +8,6 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { NavLink } from "react-router-dom";
 import styles from "./ProfilePage.module.scss";
-import { useSelector, useDispatch } from "react-redux";
 import {
   fetchLogout,
   fetchGetUser,
@@ -16,11 +15,11 @@ import {
   fetchPatchUser,
 } from "../../store/asyncActions/userAuth";
 import { useForm } from "../../hooks/useForm";
-import { TState } from "../../store/rootReduser";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 
 const ProfilePage = () => {
-  const dispatch: Function = useDispatch();
-  const profileForm = useSelector((store: TState) => store.userReduser);
+  const dispatch = useAppDispatch();
+  const profileForm = useAppSelector((store) => store.userReduser);
   const {values, handleChange, setValues} = useForm({});
   const [disabledInput, setDisabledInput] = useState({
     name: true,
@@ -64,12 +63,12 @@ const ProfilePage = () => {
     setDisabledInput({ ...disabledInput, showPass: !disabledInput.showPass });
   };
 
-  const logout = (e) => {
+  const logout = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     dispatch(fetchLogout());
   };
 
-  const patch = (e) => {
+  const patch = (e: React.SyntheticEvent<Element, Event>) => {
     e.preventDefault();
     getFetchToken(fetchPatchUser(values));
     setDisabledInput({
@@ -148,7 +147,7 @@ const ProfilePage = () => {
             ref={nameRef}
           />
           <div
-            onClick={(e) => onIconClick(nameRef)}
+            onClick={(e: React.MouseEvent<HTMLDivElement>) => onIconClick(nameRef)}
             className={`${styles.inputIcon}`}
           >
             <EditIcon type="primary" />
@@ -168,7 +167,7 @@ const ProfilePage = () => {
             ref={emailRef}
           />
           <div
-            onClick={(e) => onIconClick(emailRef)}
+            onClick={(e: React.MouseEvent<HTMLDivElement>) => onIconClick(emailRef)}
             className={`${styles.inputIcon}`}
           >
             <EditIcon type="primary" />

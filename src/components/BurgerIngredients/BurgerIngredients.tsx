@@ -106,7 +106,7 @@ const BurgerIngredients = () => {
   };
 
   // Меняем активный таб при клике
-  const changeActiveTabClicked = (e) => {
+  const changeActiveTabClicked = (e: string) => {
     scrollableNodeRef.current.removeEventListener(
       "scroll",
       eventListenerFunction

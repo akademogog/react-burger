@@ -2,12 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./FeedPage.module.scss";
 import OrderBlock from "../../components/OrderBlock/OrderBlock";
 import SimpleBar from "simplebar-react";
-import { fetchFeeds } from "../../store/asyncActions/feeds";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { WS_CONNECTION_CLOSE, WS_CONNECTION_START } from "../../store/middleware/socketActionsTypes";
 
 const FeedPage = () => {
   const dispatch = useAppDispatch();
-  const payload = useAppSelector(store => store.feedReduser.payload);
+  const message = useAppSelector(store => store.wsReducer.messages);
   const [offsetTopScrollBlock, setOffsetTopScrollBlock] = useState<number>(0);
   const scrollableNodeRef = useRef<HTMLDivElement | any>(null);
   const [feed, setFeed] = useState<any>({
@@ -23,33 +23,33 @@ const FeedPage = () => {
 
   useEffect(() => {
     getCurrentOffsetIngredientBlock();
-    dispatch(fetchFeeds());
+    dispatch({ type: WS_CONNECTION_START });
 
     return (() => {
-      dispatch(fetchFeeds('', true));
+      dispatch({ type: WS_CONNECTION_CLOSE });
     })
   }, []);
 
   useEffect(() => {
-    if (payload && payload.orders) {
-      setFeed({ ...feed, done: payload.orders.filter((el) => {
+    if (message && message.orders) {
+      setFeed({ ...feed, done: message.orders.filter((el) => {
         if (el.status === "done") {
           return true;
         }
         return false;
-      }), created: payload.orders.filter((el) => {
+      }), created: message.orders.filter((el) => {
         if (el.status === "created") {
           return true;
         }
         return false;
-      }), pending: payload.orders.filter((el) => {
+      }), pending: message.orders.filter((el) => {
         if (el.status === "pending") {
           return true;
         }
         return false;
       }), });
     }
-  }, [payload])
+  }, [message])
 
   return (    
     <div className={`${styles.container}`}>
@@ -64,7 +64,7 @@ const FeedPage = () => {
           scrollableNodeProps={{ ref: scrollableNodeRef }}
         >
           <div className={`${styles.orderContainer}`}>
-            { payload && payload.orders.map((el) => <OrderBlock key={el._id} order={el} feed={true} />)}
+            { message && message.orders.map((el) => <OrderBlock key={el._id} order={el} feed={true} />)}
           </div>
         </SimpleBar>
         <div className={`${styles.feedInfo}`}>
@@ -102,11 +102,11 @@ const FeedPage = () => {
           </div>
           <div className={`${styles.feedAllTime} mb-15`}>
             <h3 className="text text_type_main-medium">Выполнено за все время:</h3>
-            <h2 className={`${styles.feedTitle} text text_type_digits-large`}>{payload && payload.total}</h2>
+            <h2 className={`${styles.feedTitle} text text_type_digits-large`}>{message && message.total}</h2>
           </div>
           <div className={`${styles.feedAllToday}`}>
             <h3 className="text text_type_main-medium">Выполнено за сегодня:</h3>
-            <h2 className={`${styles.feedTitle} text text_type_digits-large`}>{payload && payload.totalToday}</h2>
+            <h2 className={`${styles.feedTitle} text text_type_digits-large`}>{message && message.totalToday}</h2>
           </div>
         </div>
       </div>

@@ -4,7 +4,7 @@ import { constructorReduser } from "./reducers/constructorReduser"
 import { modalIngredientReduser } from "./reducers/modalIngredientReduser"
 import { modalOrderReduser } from "./reducers/modalOrderReduser"
 import { userReduser } from "./reducers/userReduser"
-import { feedReduser } from "./reducers/feedReduser"
+import { wsReducer } from "./middleware/socketReduser"
 
 export const rootReducer = combineReducers({
   burgerIngredientsReduser,
@@ -12,7 +12,7 @@ export const rootReducer = combineReducers({
   modalIngredientReduser,
   modalOrderReduser,
   userReduser,
-  feedReduser,
+  wsReducer,
 });
 
 export type TState = ReturnType<typeof rootReducer>

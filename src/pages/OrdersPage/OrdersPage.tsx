@@ -9,13 +9,12 @@ import {
 import OrderBlock from "../../components/OrderBlock/OrderBlock";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import SimpleBar from "simplebar-react";
-import { fetchFeeds } from "../../store/asyncActions/feeds";
+import { WS_CONNECTION_CLOSE, WS_CONNECTION_START } from "../../store/middleware/socketActionsTypes";
 
 const OrdersPage = () => {
   const dispatch = useAppDispatch();
-  const payload = useAppSelector((store) => store.feedReduser.payload);
+  const message = useAppSelector((store) => store.wsReducer.messages);
   const profileForm = useAppSelector((store) => store.userReduser);
-  let accessToken = useAppSelector((store) => store.userReduser.accessToken);
   const [offsetTopScrollBlock, setOffsetTopScrollBlock] = useState<number>(0);
   const scrollableNodeRef = useRef<HTMLDivElement | any>(null);
 
@@ -32,7 +31,7 @@ const OrdersPage = () => {
     getFetchToken(fetchGetUser(profileForm.accessToken));
   }, [profileForm.accessToken]);
 
-  const logout = (e) => {
+  const logout = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     dispatch(fetchLogout());
   };
@@ -47,7 +46,11 @@ const OrdersPage = () => {
 
   useEffect(() => {
     getCurrentOffsetIngredientBlock();
-    dispatch(fetchFeeds(accessToken));
+    dispatch({ type: WS_CONNECTION_START, payload: 'logined' });
+
+    return (() => {
+      dispatch({ type: WS_CONNECTION_CLOSE });
+    })
   }, [])
 
   return (
@@ -89,7 +92,7 @@ const OrdersPage = () => {
         scrollableNodeProps={{ ref: scrollableNodeRef }}
       >
         <div className={`${styles.orderContainer}`}>
-        { payload && payload.orders.map((el) => <OrderBlock key={el._id} order={el} />)}
+        { message && message.orders.map((el) => <OrderBlock key={el._id} order={el} />)}
         </div>
       </SimpleBar>
     </div>
