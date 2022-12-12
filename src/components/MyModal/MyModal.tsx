@@ -25,7 +25,7 @@ const MyModal: FC<TMyModal> = ({ children, hideDefaultClose, modalClose, modalGo
   }
 
   useEffect(() => {
-    function closeByEscape(evt) {
+    function closeByEscape(evt: KeyboardEvent) {
       if (evt.key === "Escape") {
         onClose();
       }

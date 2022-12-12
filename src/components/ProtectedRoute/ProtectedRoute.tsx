@@ -5,7 +5,7 @@ import { fetchToken } from "../../store/asyncActions/userAuth";
 import RouteProps from 'react-router-dom';
 
 export const ProtectedRoute: FC<RouteProps> = ({ children, ...rest }) => {
-  const dispatch: Function = useAppDispatch();
+  const dispatch = useAppDispatch();
   const token = useAppSelector((store) => store.userReduser.accessToken);
   const [isUserLoaded, setUserLoaded] = useState<boolean>(false);
 

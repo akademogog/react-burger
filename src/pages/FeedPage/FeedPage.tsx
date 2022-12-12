@@ -23,7 +23,7 @@ const FeedPage = () => {
 
   useEffect(() => {
     getCurrentOffsetIngredientBlock();
-    dispatch({ type: WS_CONNECTION_START });
+    dispatch({ type: WS_CONNECTION_START, payload: '/all' });
 
     return (() => {
       dispatch({ type: WS_CONNECTION_CLOSE });

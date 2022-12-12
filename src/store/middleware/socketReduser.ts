@@ -41,7 +41,8 @@ export const wsReducer = (state = initialState, action: wsActions) => {
     case WS_CONNECTION_CLOSE:
       return {
         ...state,
-        wsConnected: false
+        wsConnected: false,
+        messages: null,
       };
 
     case WS_GET_MESSAGE:

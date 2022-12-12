@@ -11,15 +11,11 @@ export const socketMiddleware = (wsUrl: string, wsActions): Middleware => {
       const { type, payload } = action;
       const { wsConnectionStart, wsSendMessage, wsConnectionSuccess, wsConnectionClosed, wsConnectionError, wsGetMessage, wsConnectionClose } = wsActions;
       const { accessToken } = getState().userReduser;
-      
+
       if (type === wsConnectionStart) {
-        if (payload === 'logined') {          
-          socket = new WebSocket(`${wsUrl}?token=${accessToken && accessToken.replace('Bearer ', '')}`);
-        } else {
-          socket = new WebSocket(`${wsUrl}/all`);
-        }
-        
-      }
+        socket = new WebSocket(`${wsUrl}${payload}`);
+      };
+      
       if (socket) {
         socket.onopen = event => {
           dispatch({ type: wsConnectionSuccess, payload: event });

@@ -13,6 +13,7 @@ import { WS_CONNECTION_CLOSE, WS_CONNECTION_START } from "../../store/middleware
 
 const OrdersPage = () => {
   const dispatch = useAppDispatch();
+  const accessToken = useAppSelector(store => store.userReduser.accessToken);
   const message = useAppSelector((store) => store.wsReducer.messages);
   const profileForm = useAppSelector((store) => store.userReduser);
   const [offsetTopScrollBlock, setOffsetTopScrollBlock] = useState<number>(0);
@@ -46,7 +47,7 @@ const OrdersPage = () => {
 
   useEffect(() => {
     getCurrentOffsetIngredientBlock();
-    dispatch({ type: WS_CONNECTION_START, payload: 'logined' });
+    dispatch({ type: WS_CONNECTION_START, payload: `?token=${accessToken && accessToken.replace('Bearer ', '')}` });
 
     return (() => {
       dispatch({ type: WS_CONNECTION_CLOSE });
