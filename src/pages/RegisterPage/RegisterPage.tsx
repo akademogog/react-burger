@@ -7,7 +7,7 @@ import { useForm } from "../../hooks/useForm";
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks'
 
 const RegisterPage = () => {
-  const location = useLocation();
+  const location = useLocation<any>();
   const dispatch = useAppDispatch();
   const token = useAppSelector((store) => store.userReduser.accessToken);
   

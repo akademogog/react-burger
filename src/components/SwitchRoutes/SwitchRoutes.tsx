@@ -17,17 +17,16 @@ import IngridientPage from "../../pages/IngridientPage/IngridientPage";
 import OrderDetail from "../OrderDetail/OrderDetail";
 
 function SwitchRoutes() {
-  const location = useLocation();
+  const location = useLocation<any | undefined>();
   const history = useHistory();
 
-  let background: boolean = location.state && location.state.background;
   const modalGoBack = () => {
     history.goBack();
   };
 
   return (
     <div>
-      <Switch location={background || location}>
+      <Switch location={ (location.state && location.state.background) || location }>
         <Route path="/" exact={true}>
           <MainPage />
         </Route>
@@ -66,7 +65,7 @@ function SwitchRoutes() {
         </Route>
       </Switch>
 
-      {background && (
+      {(location.state && location.state.background) && (
         <Switch>
           <Route path="/ingredients/:id">
             <MyModal modalGoBack={modalGoBack}>

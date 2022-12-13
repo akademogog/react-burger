@@ -33,7 +33,7 @@ export interface IWsSendMessage {
   readonly payload: any;
 }
 
-export type wsActions = 
+export type TwsActions = 
   | IWsConnectionStart
   | IWsConnectionSuccess
   | IWsConnectionError

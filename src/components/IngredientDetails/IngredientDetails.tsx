@@ -2,10 +2,11 @@ import React from "react";
 import { useAppSelector } from "../../hooks/hooks";
 import styles from "./IngredientDetails.module.scss";
 import { useParams } from "react-router-dom";
+import { TuseParams } from "../OrderDetail/OrderDetail";
 
 const IngredientDetails = () => {
   const ingredients = useAppSelector((store) => store.burgerIngredientsReduser.ingredients);
-  let { id } = useParams();
+  let { id } = useParams<TuseParams>();
   const currentIngredient = ingredients.find(el => el._id === id);
 
   return (

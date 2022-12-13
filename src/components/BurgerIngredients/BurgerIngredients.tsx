@@ -53,7 +53,7 @@ const BurgerIngredients = () => {
     ingredientBlockRef.current = [];
   }, [ingredients]);
 
-  const addToBlockRefs = (el) => {
+  const addToBlockRefs = (el: HTMLDivElement) => {
     if (el && !ingredientBlockRef.current.includes(el)) {
       ingredientBlockRef.current.push(el);
     }

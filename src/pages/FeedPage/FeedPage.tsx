@@ -4,6 +4,17 @@ import OrderBlock from "../../components/OrderBlock/OrderBlock";
 import SimpleBar from "simplebar-react";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { WS_CONNECTION_CLOSE, WS_CONNECTION_START } from "../../store/middleware/socketActionsTypes";
+import { IDrgagItem } from "../../utils/types";
+
+export type TOrders = {
+  createdAt: string;
+  ingredients: string[];
+  name: string;
+  number: number;
+  status: string;
+  updatedAt: string;
+  _id: string;
+}
 
 const FeedPage = () => {
   const dispatch = useAppDispatch();
@@ -32,17 +43,17 @@ const FeedPage = () => {
 
   useEffect(() => {
     if (message && message.orders) {
-      setFeed({ ...feed, done: message.orders.filter((el) => {
+      setFeed({ ...feed, done: message.orders.filter((el: TOrders) => {
         if (el.status === "done") {
           return true;
         }
         return false;
-      }), created: message.orders.filter((el) => {
+      }), created: message.orders.filter((el: TOrders) => {
         if (el.status === "created") {
           return true;
         }
         return false;
-      }), pending: message.orders.filter((el) => {
+      }), pending: message.orders.filter((el: TOrders) => {
         if (el.status === "pending") {
           return true;
         }
@@ -64,7 +75,7 @@ const FeedPage = () => {
           scrollableNodeProps={{ ref: scrollableNodeRef }}
         >
           <div className={`${styles.orderContainer}`}>
-            { message && message.orders.map((el) => <OrderBlock key={el._id} order={el} feed={true} />)}
+            { message && message.orders.map((el: IDrgagItem) => <OrderBlock key={el._id} order={el} feed={true} />)}
           </div>
         </SimpleBar>
         <div className={`${styles.feedInfo}`}>
@@ -75,7 +86,7 @@ const FeedPage = () => {
                 <div style={{
                   columnCount: Math.floor(feed.done.length / 10),
                 }}>
-                  { feed.done && feed.done.map((el, index) => <p key={index} className="text text_type_digits-default">{el.number}</p>)}
+                  { feed.done && feed.done.map((el: any, index: number) => <p key={index} className="text text_type_digits-default">{el.number}</p>)}
                 </div>
               </div> : ''
             }
@@ -85,7 +96,7 @@ const FeedPage = () => {
                 <div style={{
                   columnCount: Math.floor(feed.done.length / 10),
                 }}>
-                  { feed.created && feed.created.map((el, index) => <p key={index} className="text text_type_digits-default">{el.number}</p>)}
+                  { feed.created && feed.created.map((el: any, index: number) => <p key={index} className="text text_type_digits-default">{el.number}</p>)}
                 </div>
               </div> : ''
             }
@@ -95,7 +106,7 @@ const FeedPage = () => {
                 <div style={{
                   columnCount: Math.floor(feed.done.length / 10),
                 }}>
-                  { feed.pending && feed.pending.map((el, index) => <p key={index} className="text text_type_digits-default">{el.number}</p>)}
+                  { feed.pending && feed.pending.map((el: any, index: number) => <p key={index} className="text text_type_digits-default">{el.number}</p>)}
                 </div>
               </div> : ''
             }

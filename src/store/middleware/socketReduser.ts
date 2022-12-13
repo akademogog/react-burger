@@ -1,4 +1,4 @@
-import { wsActions } from './socketActions';
+import { TwsActions } from './socketActions';
 import {
   WS_CONNECTION_SUCCESS,
   WS_CONNECTION_ERROR,
@@ -18,7 +18,7 @@ const initialState: TWSState = {
   messages: null,
 };
 
-export const wsReducer = (state = initialState, action: wsActions) => {
+export const wsReducer = (state = initialState, action: TwsActions) => {
   switch (action.type) {
     case WS_CONNECTION_SUCCESS:
       return {

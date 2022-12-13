@@ -10,6 +10,7 @@ import OrderBlock from "../../components/OrderBlock/OrderBlock";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import SimpleBar from "simplebar-react";
 import { WS_CONNECTION_CLOSE, WS_CONNECTION_START } from "../../store/middleware/socketActionsTypes";
+import { IDrgagItem } from "../../utils/types";
 
 const OrdersPage = () => {
   const dispatch = useAppDispatch();
@@ -37,7 +38,7 @@ const OrdersPage = () => {
     dispatch(fetchLogout());
   };
 
-  const getFetchToken = (callback) => {
+  const getFetchToken = (callback: any) => {
     if (profileForm.accessToken) {
       dispatch(callback);
     } else {
@@ -93,7 +94,7 @@ const OrdersPage = () => {
         scrollableNodeProps={{ ref: scrollableNodeRef }}
       >
         <div className={`${styles.orderContainer}`}>
-        { message && message.orders.map((el) => <OrderBlock key={el._id} order={el} />)}
+        { message && message.orders.map((el: IDrgagItem) => <OrderBlock key={el._id} order={el} />)}
         </div>
       </SimpleBar>
     </div>

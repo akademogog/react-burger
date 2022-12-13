@@ -138,7 +138,7 @@ const BurgerConstructor = () => {
   };
 
   const moveCard = useCallback(
-    (dragIndex, hoverIndex) => {
+    (dragIndex: number, hoverIndex: number) => {
       const dragCard = constructorIngredients[dragIndex];
       const newCards = [...constructorIngredients];
       newCards.splice(dragIndex, 1);

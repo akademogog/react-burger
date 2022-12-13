@@ -3,7 +3,7 @@ import { ThunkAction } from 'redux-thunk';
 import { store } from '../store/store';
 import { TBurgerIngredientsActions } from '../store/actions/burgerIngredientsActions';
 import { TUserActions } from '../store/actions/userActions';
-import { wsActions } from '../store/middleware/socketActions';
+import { TwsActions } from '../store/middleware/socketActions';
 
 export type RootState = ReturnType<typeof store.getState>;
 
@@ -11,11 +11,9 @@ export type RootState = ReturnType<typeof store.getState>;
 export type TApplicationActions = 
   | TUserActions
   | TBurgerIngredientsActions
-  | wsActions;
+  | TwsActions;
 
-export type AppThunk<TReturn = void> = ActionCreator<
-  ThunkAction<TReturn, Action, RootState, TApplicationActions>
->;
+export type AppThunk<TReturn = void> = ActionCreator<ThunkAction<TReturn, Action, RootState, TApplicationActions>>;
 
 // Типизация метода dispatch для проверки на валидность отправляемого экшена
 export type AppDispatch = typeof store.dispatch;
@@ -39,6 +37,7 @@ export interface IDrgagItem extends IIngredientItem {
   dragId?: string;
   index?: number;
   id?: number;
+  count?: number;
 }
 
 export type Titem = {

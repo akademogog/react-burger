@@ -6,34 +6,17 @@ import {
 import { useLocation, Link } from "react-router-dom";
 import { useAppSelector } from '../../hooks/hooks';
 import { getDate, getFeedStatus, getTotalPrice, sortIngredients } from '../../utils/feed';
+import { IDrgagItem } from '../../utils/types';
 
 type TOrderBlock = {
   feed?: boolean;
   order?: any;
 }
 
-type TElCount = {
-  count: number;
-  dragId?: string | undefined;
-  index?: number | undefined;
-  id?: number | undefined;
-  name: string;
-  type: string;
-  proteins: number;
-  fat: number;
-  carbohydrates: number;
-  image: string;
-  image_large: string;
-  image_mobile: string;
-  __v: number;
-  _id: string;
-  price: number;
-}
-
 const OrderBlock: FC<TOrderBlock> = ({ feed, order }) => {
   const ingredients = useAppSelector((store) => store.burgerIngredientsReduser.ingredients);
   const location = useLocation();
-  const [sortedIngredients, setSortedIngredients] = useState<TElCount[]>([]);
+  const [sortedIngredients, setSortedIngredients] = useState<IDrgagItem[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>();
   const [timeString, setTimeString] = useState<string>();
   const [feedStatus, setFeedStatus] = useState<string>();
@@ -75,7 +58,7 @@ const OrderBlock: FC<TOrderBlock> = ({ feed, order }) => {
                 (
                   <div key={index} className={`${styles.orderIngredient}`}>
                     <img src={`${el.image}`} alt="" />
-                    { (el.count > 1) && <span className='text text_type_main-small'>+{el.count}</span>}
+                    { (el.count && el.count > 1) && <span className='text text_type_main-small'>+{el.count}</span>}
                   </div>
                 )
               )

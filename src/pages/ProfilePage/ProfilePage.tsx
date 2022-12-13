@@ -16,6 +16,7 @@ import {
 } from "../../store/asyncActions/userAuth";
 import { useForm } from "../../hooks/useForm";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { TApplicationActions } from "../../utils/types";
 
 const ProfilePage = () => {
   const dispatch = useAppDispatch();
@@ -28,9 +29,9 @@ const ProfilePage = () => {
     showPassIcon: false,
     showPass: false,
   });
-  const nameRef = useRef(null);
-  const emailRef = useRef(null);
-  const passRef = useRef(null);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setValues({
@@ -43,7 +44,7 @@ const ProfilePage = () => {
     getFetchToken(fetchGetUser(profileForm.accessToken));
   }, [profileForm.accessToken]);
 
-  const onIconClick = (ref) => {
+  const onIconClick = (ref: any) => {
     const currentRefName = ref.current.name;
     if (currentRefName === "password") {
       setDisabledInput({
@@ -80,7 +81,7 @@ const ProfilePage = () => {
     });
   };
 
-  const getFetchToken = (callback) => {
+  const getFetchToken = (callback: TApplicationActions) => {
     if (profileForm.accessToken) {
       dispatch(callback);
     } else {

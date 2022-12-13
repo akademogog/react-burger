@@ -10,7 +10,7 @@ import { fetchLogin, fetchToken } from "../../store/asyncActions/userAuth";
 import { useForm } from "../../hooks/useForm";
 
 const LoginPage = () => {
-  const location = useLocation();
+  const location = useLocation<any>();
   const dispatch = useAppDispatch();
   const token = useAppSelector((store) => store.userReduser.accessToken);
 

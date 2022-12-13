@@ -2,6 +2,7 @@ import {
   SET_ORDER_NUMBER,
   SEND_ORDER_SUCCESS,
   SEND_ORDER,
+  TBurgerIngredientsActions,
 } from "../actions/burgerIngredientsActions";
 
 type TModalOrderState = {
@@ -14,7 +15,7 @@ const modalOrderState: TModalOrderState = {
   isLoad: false,
 };
 
-export const modalOrderReduser = (state = modalOrderState, action) => {
+export const modalOrderReduser = (state = modalOrderState, action: TBurgerIngredientsActions) => {
   switch (action.type) {
     case SET_ORDER_NUMBER: {
       return {

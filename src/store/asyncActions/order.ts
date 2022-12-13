@@ -3,7 +3,7 @@ import { request } from "../../utils/request";
 import { AppDispatch, AppThunk } from "../../utils/types";
 import { sendOrder, sendOrderSuccess, setOrderNumber } from "../actions/burgerIngredientsActions";
 
-export const fetchOrder: AppThunk = (ingredientsID: string[], token: string | null) => {
+export const fetchOrder: AppThunk | any = (ingredientsID: string[], token: string | null) => {
   return (dispatch: AppDispatch) => {
     dispatch(sendOrder());
     request(ORDERS_URL, {
