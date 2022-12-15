@@ -6,7 +6,7 @@ import SwitchRoutes from "../SwitchRoutes/SwitchRoutes";
 import { useAppDispatch } from "../../hooks/hooks";
 
 function App() {
-  const dispatch: Function = useAppDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(fetchIngredients());

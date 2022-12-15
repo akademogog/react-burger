@@ -21,7 +21,7 @@
     "noEmit": true,
     "jsx": "preserve",
     "checkJs": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
   },
   "include": [
     "src"

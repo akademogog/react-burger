@@ -8,7 +8,6 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { NavLink } from "react-router-dom";
 import styles from "./ProfilePage.module.scss";
-import { useSelector, useDispatch } from "react-redux";
 import {
   fetchLogout,
   fetchGetUser,
@@ -16,11 +15,12 @@ import {
   fetchPatchUser,
 } from "../../store/asyncActions/userAuth";
 import { useForm } from "../../hooks/useForm";
-import { TState } from "../../store/rootReduser";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { TApplicationActions } from "../../utils/types";
 
 const ProfilePage = () => {
-  const dispatch: Function = useDispatch();
-  const profileForm = useSelector((store: TState) => store.userReduser);
+  const dispatch = useAppDispatch();
+  const profileForm = useAppSelector((store) => store.userReduser);
   const {values, handleChange, setValues} = useForm({});
   const [disabledInput, setDisabledInput] = useState({
     name: true,
@@ -29,9 +29,9 @@ const ProfilePage = () => {
     showPassIcon: false,
     showPass: false,
   });
-  const nameRef = useRef(null);
-  const emailRef = useRef(null);
-  const passRef = useRef(null);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setValues({
@@ -44,7 +44,7 @@ const ProfilePage = () => {
     getFetchToken(fetchGetUser(profileForm.accessToken));
   }, [profileForm.accessToken]);
 
-  const onIconClick = (ref) => {
+  const onIconClick = (ref: any) => {
     const currentRefName = ref.current.name;
     if (currentRefName === "password") {
       setDisabledInput({
@@ -64,12 +64,12 @@ const ProfilePage = () => {
     setDisabledInput({ ...disabledInput, showPass: !disabledInput.showPass });
   };
 
-  const logout = (e) => {
+  const logout = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     dispatch(fetchLogout());
   };
 
-  const patch = (e) => {
+  const patch = (e: React.SyntheticEvent<Element, Event>) => {
     e.preventDefault();
     getFetchToken(fetchPatchUser(values));
     setDisabledInput({
@@ -81,7 +81,7 @@ const ProfilePage = () => {
     });
   };
 
-  const getFetchToken = (callback) => {
+  const getFetchToken = (callback: TApplicationActions) => {
     if (profileForm.accessToken) {
       dispatch(callback);
     } else {
@@ -148,7 +148,7 @@ const ProfilePage = () => {
             ref={nameRef}
           />
           <div
-            onClick={(e) => onIconClick(nameRef)}
+            onClick={(e: React.MouseEvent<HTMLDivElement>) => onIconClick(nameRef)}
             className={`${styles.inputIcon}`}
           >
             <EditIcon type="primary" />
@@ -168,7 +168,7 @@ const ProfilePage = () => {
             ref={emailRef}
           />
           <div
-            onClick={(e) => onIconClick(emailRef)}
+            onClick={(e: React.MouseEvent<HTMLDivElement>) => onIconClick(emailRef)}
             className={`${styles.inputIcon}`}
           >
             <EditIcon type="primary" />

@@ -1,27 +1,30 @@
-export const getDate = (currentFeed, setTimeString) => {
+import { IDrgagItem } from "./types";
+
+export const getDate = (currentFeed: any, setTimeString: Function) => {
   const orderDate = new Date(currentFeed.createdAt);
   const currentDate = new Date();
   const timeZone = orderDate.getTimezoneOffset()/60;
+  const days = Math.round(currentDate.getTime() / (24 * 60 * 60000)) - Math.round(orderDate.getTime() / (24 * 60 * 60000));
   let dateString = '';
   const getTimeString = `${orderDate.getHours()}:${orderDate.getMinutes()} i-GMT ${timeZone}`;
-  if ((currentDate.getDate() - orderDate.getDate()) === 0) {
+  if (days === 0) {
     dateString = `Сегодня, ${getTimeString}`
-  } else if ((currentDate.getDate() - orderDate.getDate()) === 1) {
+  } else if (days === 1) {
     dateString = `Вчера, ${getTimeString}`
   } else {
-    dateString = `${(currentDate.getDate() - orderDate.getDate())} дня назад, ${getTimeString}`
+    dateString = `${days} дня назад, ${getTimeString}`
   }
   setTimeString(dateString);
 }
 
-export const sortIngredients = (currentFeed, ingredients, setSortedIngredients) => {
-  const counts = {};
-  currentFeed.ingredients.forEach((x) => { counts[x] = (counts[x] || 0) + 1; });
+export const sortIngredients = (currentFeed: any, ingredients: IDrgagItem[], setSortedIngredients: Function) => {
+  const counts: any = {};
+  currentFeed.ingredients.forEach((x: string) => { counts[x] = (counts[x] || 0) + 1; });
   const sorted: any = [];
   for (const key in counts) {
     if (Object.prototype.hasOwnProperty.call(counts, key)) {
       const count: number = counts[key];
-      ingredients.map(el => {
+      ingredients.map((el: IDrgagItem) => {
         if (el._id === key) {
           const elCount = { ...el, count }
           sorted.push(elCount);
@@ -32,15 +35,15 @@ export const sortIngredients = (currentFeed, ingredients, setSortedIngredients) 
   setSortedIngredients(sorted);    
 }
 
-export const getTotalPrice = (sortedIngredients, setTotalPrice) => {
+export const getTotalPrice = (sortedIngredients: IDrgagItem[], setTotalPrice: Function) => {
   let price: number = 0;
-  sortedIngredients.map((el) => {
-    price += el.price * el.count;
+  sortedIngredients.map((el: IDrgagItem) => {
+    price += el.price * el.count!;
   });
   setTotalPrice(price);
 }
 
-export const getFeedStatus = (currentFeed, setFeedStatus) => {
+export const getFeedStatus = (currentFeed: any, setFeedStatus: Function) => {
   if (currentFeed.status === 'done') {
     setFeedStatus('Выполнен');
   } else if (currentFeed.status === 'created') {

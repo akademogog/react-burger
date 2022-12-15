@@ -5,7 +5,7 @@ type TuseForm = {values: {[name: string]: string}; handleChange: any; setValues:
 export function useForm(inputValues: {[name: string]: string}): TuseForm {
   const [values, setValues] = useState(inputValues);
 
-  const handleChange = (event) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {value, name} = event.target;
     setValues({...values, [name]: value});
   };

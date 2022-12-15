@@ -1,10 +1,11 @@
 import { ORDERS_URL } from "../../utils/constants";
 import { request } from "../../utils/request";
 import { AppDispatch, AppThunk } from "../../utils/types";
-import { setOrderNumber } from "../actions/burgerIngredientsActions";
+import { sendOrder, sendOrderSuccess, setOrderNumber } from "../actions/burgerIngredientsActions";
 
-export const fetchOrder: AppThunk = (ingredientsID: string[], token: string | null) => {
+export const fetchOrder: AppThunk | any = (ingredientsID: string[], token: string | null) => {
   return (dispatch: AppDispatch) => {
+    dispatch(sendOrder());
     request(ORDERS_URL, {
       method: "POST",
       headers: {
@@ -16,7 +17,8 @@ export const fetchOrder: AppThunk = (ingredientsID: string[], token: string | nu
       .then((res: any) => {
         if (res.success) {
           const number = res.order.number;
-          dispatch(setOrderNumber(number))
+          dispatch(sendOrderSuccess());
+          dispatch(setOrderNumber(number));
         }
       })
       .catch((error) => error)

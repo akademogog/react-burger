@@ -25,9 +25,6 @@ import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 
 const BurgerConstructor = () => {
   const history = useHistory();
-  const ingredients = useAppSelector(
-    (store) => store.burgerIngredientsReduser.ingredients
-  );
   const constructorIngredients = useAppSelector(
     (store) => store.constructorReduser.constructorIngredients
   );
@@ -39,6 +36,7 @@ const BurgerConstructor = () => {
   );
   const order = useAppSelector((store) => store.modalOrderReduser);
   const token = useAppSelector((store) => store.userReduser.accessToken);
+  const isLoadOrder = useAppSelector(store => store.modalOrderReduser.isLoad)
 
   const [visibleModal, setVisibleModal] = useState<boolean>(false);
   const [heightTopScrollBlock, setHeightTopScrollBlock] = useState<number>(0);
@@ -140,7 +138,7 @@ const BurgerConstructor = () => {
   };
 
   const moveCard = useCallback(
-    (dragIndex, hoverIndex) => {
+    (dragIndex: number, hoverIndex: number) => {
       const dragCard = constructorIngredients[dragIndex];
       const newCards = [...constructorIngredients];
       newCards.splice(dragIndex, 1);
@@ -248,13 +246,13 @@ const BurgerConstructor = () => {
               <CurrencyIcon type="primary" />
             </div>
             <Button
-              disabled={!constructorBun}
+              disabled={!constructorBun || isLoadOrder}
               type="primary"
               size="large"
               onClick={sendOrder}
               htmlType="button"
             >
-              Оформить заказ
+              {isLoadOrder ? 'Обрабатываем заказ' : 'Оформить заказ'} 
             </Button>
           </div>
         </div>

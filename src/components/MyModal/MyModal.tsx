@@ -25,7 +25,7 @@ const MyModal: FC<TMyModal> = ({ children, hideDefaultClose, modalClose, modalGo
   }
 
   useEffect(() => {
-    function closeByEscape(evt) {
+    function closeByEscape(evt: KeyboardEvent) {
       if (evt.key === "Escape") {
         onClose();
       }
@@ -43,7 +43,7 @@ const MyModal: FC<TMyModal> = ({ children, hideDefaultClose, modalClose, modalGo
       <ModalOverlay onClose={onClose}/>
       <div
         className={styles.myModalContent}
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e: React.MouseEvent<HTMLElement>) => e.stopPropagation()}
       >
         {!hideDefaultClose && (
           <div

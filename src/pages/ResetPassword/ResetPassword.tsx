@@ -8,18 +8,17 @@ import styles from "./ResetPassword.module.scss";
 import { PASSWORD_RESET_URL } from "../../utils/constants";
 import { useForm } from "../../hooks/useForm";
 import { request } from "../../utils/request";
-import { useDispatch, useSelector } from "react-redux";
 import { fetchToken } from "../../store/asyncActions/userAuth";
-import { TState } from "../../store/rootReduser";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 
 const ResetPassword = () => {
-  const location = useLocation();
-  const dispatch: Function = useDispatch();
-  const token = useSelector((store: TState) => store.userReduser.accessToken);
+  const location = useLocation<any>();
+  const dispatch = useAppDispatch();
+  const token = useAppSelector((store) => store.userReduser.accessToken);
 
   const { values, handleChange } = useForm({});
 
-  const resetPass = async (e) => {
+  const resetPass = async (e: React.SyntheticEvent<Element, Event>) => {
     e.preventDefault();
     await request(PASSWORD_RESET_URL, {
       method: "POST",

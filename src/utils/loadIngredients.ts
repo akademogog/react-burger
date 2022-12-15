@@ -7,7 +7,7 @@ const loadIngredients = async (INGREDIENTS_URL: string, INGREDIENT_TYPE: Tingred
       const responseResultData = responseResult.data;
 
       if (INGREDIENT_TYPE) {
-        responseResultData.map((card) => {
+        responseResultData.map((card: TingredientType) => {
           const curentType = card.type;
 
           for (const key in INGREDIENT_TYPE) {

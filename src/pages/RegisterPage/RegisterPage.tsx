@@ -1,20 +1,19 @@
 import React, { useEffect } from 'react'
 import { Input, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link, Redirect, useLocation } from 'react-router-dom';
-import styles from './RegisterPage.module.scss'
-import { useDispatch, useSelector } from 'react-redux';
+import styles from './RegisterPage.module.scss';
 import { fetchRegister, fetchToken } from "../../store/asyncActions/userAuth";
 import { useForm } from "../../hooks/useForm";
-import { TState } from '../../store/rootReduser';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks'
 
 const RegisterPage = () => {
-  const location = useLocation();
-  const dispatch: Function = useDispatch();
-  const token = useSelector((store: TState) => store.userReduser.accessToken);
+  const location = useLocation<any>();
+  const dispatch = useAppDispatch();
+  const token = useAppSelector((store) => store.userReduser.accessToken);
   
   const {values, handleChange} = useForm({});
 
-  const reg = (e) => {
+  const reg = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(fetchRegister(values));
   };

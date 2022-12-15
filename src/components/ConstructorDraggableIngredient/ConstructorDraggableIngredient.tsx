@@ -55,7 +55,7 @@ const ConstructorDraggableIngredient: FC<TConstructorDraggableIngredient> = ({
   });
   const opacity = isDragging ? 0.3 : 1;
   if (item.type !== 'bun') drag(drop(ref));
-  const preventDefault = (e) => e.preventDefault();
+  const preventDefault = (e: any) => e.preventDefault();
 
   return (
     <div

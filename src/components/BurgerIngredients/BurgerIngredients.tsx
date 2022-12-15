@@ -53,7 +53,7 @@ const BurgerIngredients = () => {
     ingredientBlockRef.current = [];
   }, [ingredients]);
 
-  const addToBlockRefs = (el) => {
+  const addToBlockRefs = (el: HTMLDivElement) => {
     if (el && !ingredientBlockRef.current.includes(el)) {
       ingredientBlockRef.current.push(el);
     }
@@ -106,7 +106,7 @@ const BurgerIngredients = () => {
   };
 
   // Меняем активный таб при клике
-  const changeActiveTabClicked = (e) => {
+  const changeActiveTabClicked = (e: string) => {
     scrollableNodeRef.current.removeEventListener(
       "scroll",
       eventListenerFunction

@@ -1,9 +1,9 @@
 import { INGREDIENTS_URL, INGREDIENT_TYPE } from "../../utils/constants";
 import { request } from "../../utils/request";
-import { AppDispatch, AppThunk } from "../../utils/types";
+import { AppDispatch, AppThunk, IDrgagItem } from "../../utils/types";
 import { loadIngredientsRequest, loadIngredientsSuccess, loadIngredientsError } from "../actions/burgerIngredientsActions";
 
-export const fetchIngredients: AppThunk = () => {
+export const fetchIngredients: AppThunk | any = () => {
   return (dispatch: AppDispatch) => {
     dispatch(loadIngredientsRequest(true));
     request(INGREDIENTS_URL)
@@ -11,7 +11,7 @@ export const fetchIngredients: AppThunk = () => {
         const responseResultData = responseResult.data;
 
         if (INGREDIENT_TYPE) {
-          responseResultData.map((card) => {
+          responseResultData.map((card: IDrgagItem) => {
             const curentType = card.type;
 
             for (const key in INGREDIENT_TYPE) {

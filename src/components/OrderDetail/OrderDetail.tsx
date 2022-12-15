@@ -7,30 +7,18 @@ import SimpleBar from "simplebar-react";
 import { useParams } from "react-router-dom";
 import { useAppSelector } from '../../hooks/hooks';
 import { getDate, getFeedStatus, getTotalPrice, sortIngredients } from '../../utils/feed';
+import { TOrders } from '../../pages/FeedPage/FeedPage';
+import { IDrgagItem } from '../../utils/types';
 
-type TElCount = {
-  count: number;
-  dragId?: string | undefined;
-  index?: number | undefined;
-  id?: number | undefined;
-  name: string;
-  type: string;
-  proteins: number;
-  fat: number;
-  carbohydrates: number;
-  image: string;
-  image_large: string;
-  image_mobile: string;
-  __v: number;
-  _id: string;
-  price: number;
+export type TuseParams = {
+  id: string;
 }
 
 const OrderDetail: any = () => {
-  let { id } = useParams();  
-  const currentFeed = useAppSelector((store) => store.feedReduser.payload?.orders.find(el => el.number == id));
+  let { id } = useParams<TuseParams>();  
+  const currentFeed = useAppSelector((store) => store.wsReducer.messages?.orders.find((el: TOrders) => el.number == parseInt(id)));
   const ingredients = useAppSelector((store) => store.burgerIngredientsReduser.ingredients)
-  const [sortedIngredients, setSortedIngredients] = useState<TElCount[]>([]);
+  const [sortedIngredients, setSortedIngredients] = useState<IDrgagItem[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>();
   const [timeString, setTimeString] = useState<string>();
   const [feedStatus, setFeedStatus] = useState<string>();

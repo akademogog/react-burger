@@ -14,21 +14,19 @@ import Page404 from "../../pages/404/Page404";
 import MyModal from "../MyModal/MyModal";
 import IngredientDetails from "../IngredientDetails/IngredientDetails";
 import IngridientPage from "../../pages/IngridientPage/IngridientPage";
-import OrderBlock from "../OrderBlock/OrderBlock";
 import OrderDetail from "../OrderDetail/OrderDetail";
 
 function SwitchRoutes() {
-  const location = useLocation();
+  const location = useLocation<any | undefined>();
   const history = useHistory();
 
-  let background: boolean = location.state && location.state.background;
   const modalGoBack = () => {
     history.goBack();
   };
 
   return (
     <div>
-      <Switch location={background || location}>
+      <Switch location={ (location.state && location.state.background) || location }>
         <Route path="/" exact={true}>
           <MainPage />
         </Route>
@@ -56,29 +54,29 @@ function SwitchRoutes() {
         <ProtectedRoute path="/profile/orders/:id" exact={true}>
           <OrderPage />
         </ProtectedRoute>
-        <ProtectedRoute path="/feed" exact={true}>
+        <Route path="/feed" exact={true}>
           <FeedPage />
-        </ProtectedRoute>
-        <ProtectedRoute path="/feed/:id" exact={true}>
+        </Route>
+        <Route path="/feed/:id" exact={true}>
           <OrderPage />
-        </ProtectedRoute>
+        </Route>
         <Route path="*">
           <Page404 />
         </Route>
       </Switch>
 
-      {background && (
+      {(location.state && location.state.background) && (
         <Switch>
           <Route path="/ingredients/:id">
             <MyModal modalGoBack={modalGoBack}>
               <IngredientDetails />
             </MyModal>
           </Route>
-          <Route path="/profile/orders/:id">
+          <ProtectedRoute path="/profile/orders/:id">
             <MyModal modalGoBack={modalGoBack}>
               <OrderDetail />
             </MyModal>
-          </Route>
+          </ProtectedRoute>
           <Route path="/feed/:id">
             <MyModal modalGoBack={modalGoBack}>
               <OrderDetail />

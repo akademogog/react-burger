@@ -1,13 +1,13 @@
 import { REGISTER_URL, LOGIN_URL, TOKEN_URL, LOGOUT_URL, GET_USER_URL } from "../../utils/constants";
 import { request } from "../../utils/request";
 import { AppDispatch, AppThunk } from "../../utils/types";
-import { userRegister, userLogin, userToken, userLogout, getUser, patchUser } from "../actions/userActions";
+import { userRegister, userLogin, userToken, userLogout, getUser, patchUser, IUserLogin } from "../actions/userActions";
 
 type TStaringObj = {
   [name: string]: string;
 }
 
-export const fetchRegister: AppThunk = ({ email, name, password }: TStaringObj) => {
+export const fetchRegister: AppThunk | any = ({ email, name, password }: TStaringObj) => {
   return (dispatch: AppDispatch) => {
     request(REGISTER_URL, {
       method: "POST",
@@ -25,7 +25,7 @@ export const fetchRegister: AppThunk = ({ email, name, password }: TStaringObj) 
   };
 };
 
-export const fetchLogin: AppThunk = ({ email, password }: TStaringObj) => {
+export const fetchLogin: AppThunk | any = ({ email, password }: TStaringObj) => {
   return (dispatch: AppDispatch) => {
     request(LOGIN_URL, {
       method: "POST",
@@ -43,7 +43,7 @@ export const fetchLogin: AppThunk = ({ email, password }: TStaringObj) => {
   };
 };
 
-export const fetchToken: AppThunk = () => {
+export const fetchToken: AppThunk | any = () => {
   return (dispatch: AppDispatch) => {
     request(TOKEN_URL, {
       method: "POST",
@@ -62,7 +62,7 @@ export const fetchToken: AppThunk = () => {
   };
 };
 
-export const fetchLogout: AppThunk = () => {
+export const fetchLogout: AppThunk | any = () => {
   return (dispatch: AppDispatch) => {
     request(LOGOUT_URL, {
       method: "POST",
@@ -80,7 +80,7 @@ export const fetchLogout: AppThunk = () => {
   };
 };
 
-export const fetchGetUser: AppThunk = (accessToken: string) => {
+export const fetchGetUser: AppThunk | any = (accessToken: string) => {
   return (dispatch: AppDispatch) => {
     request(GET_USER_URL, {
       method: "GET",
@@ -98,11 +98,12 @@ export const fetchGetUser: AppThunk = (accessToken: string) => {
         if (!error.success) {
           dispatch(fetchToken());
         }
+
       });
   };
 };
 
-export const fetchPatchUser: AppThunk = ({ accessToken, email, name, password }: TStaringObj) => {
+export const fetchPatchUser: AppThunk | any = ({ accessToken, email, name, password }: TStaringObj) => {
   return (dispatch: AppDispatch) => {
     request(GET_USER_URL, {
       method: "PATCH",

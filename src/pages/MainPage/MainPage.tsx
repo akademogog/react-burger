@@ -1,15 +1,14 @@
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../hooks/hooks";
 import BurgerConstructor from "../../components/BurgerConstructor/BurgerConstructor";
 import BurgerIngredients from "../../components/BurgerIngredients/BurgerIngredients";
-import { TState } from "../../store/rootReduser";
 import styles from "./MainPage.module.scss";
 
 const MainPage = () => {
-  const { isLoading, ingredients, isError } = useSelector(
-    (store: TState) => store.burgerIngredientsReduser
+  const { isLoading, ingredients, isError } = useAppSelector(
+    (store) => store.burgerIngredientsReduser
   );
 
   return (

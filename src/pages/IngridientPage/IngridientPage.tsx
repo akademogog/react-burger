@@ -4,8 +4,12 @@ import { useParams } from "react-router-dom";
 import { IDrgagItem } from "../../utils/types";
 import { useAppSelector } from "../../hooks/hooks";
 
+type TthisId = {
+  id: string;
+}
+
 const IngridientPage = () => {
-  const thisId = useParams();
+  const thisId = useParams<TthisId>();
   const ingredients = useAppSelector(
     (store) => store.burgerIngredientsReduser.ingredients
   );
@@ -14,7 +18,7 @@ const IngridientPage = () => {
 
   useEffect(() => {
     if (ingredients.length) {
-      setCurrentIngredient(ingredients.find((el) => el._id === thisId.id));
+      setCurrentIngredient(ingredients.find((el: IDrgagItem) => el._id === thisId.id));
     }
   }, [ingredients]);
 
