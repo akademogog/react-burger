@@ -251,6 +251,7 @@ const BurgerConstructor = () => {
               size="large"
               onClick={sendOrder}
               htmlType="button"
+              data-testid="orderBtn"
             >
               {isLoadOrder ? 'Обрабатываем заказ' : 'Оформить заказ'} 
             </Button>

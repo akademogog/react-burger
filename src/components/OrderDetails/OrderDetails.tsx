@@ -7,7 +7,7 @@ const OrderDetails = () => {
   const number = useAppSelector((store) => store.modalOrderReduser.number);
   
   return (
-    <div className={`${styles.orderAcceptedBlock}`}>
+    <div className={`${styles.orderAcceptedBlock}`} data-testid="orderModal">
       <h2 className="text text_type_digits-large mb-8">{number}</h2>
       <p className="text text_type_main-medium mb-15">идентификатор заказа</p>
       <img src={Done} alt="Галочка" className="mb-15" />

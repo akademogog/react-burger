@@ -32,7 +32,7 @@ const LoginPage = () => {
   }
 
   return (
-    <form className={`${styles.loginForm}`} onSubmit={login}>
+    <form className={`${styles.loginForm}`} onSubmit={login} data-testid="loginForm">
       <p className="text text_type_main-medium mb-6">Вход</p>
       <div className="mb-6">
         <Input
@@ -44,6 +44,7 @@ const LoginPage = () => {
           error={false}
           errorText={"Ошибка"}
           size={"default"}
+          data-testid="loginEmail"
         />
       </div>
       <div className="mb-6">
@@ -57,6 +58,7 @@ const LoginPage = () => {
           errorText={"Ошибка"}
           size={"default"}
           icon={"ShowIcon"}
+          data-testid="loginPass"
         />
       </div>
       <div className="mb-20">
