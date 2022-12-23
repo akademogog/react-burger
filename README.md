@@ -2,6 +2,12 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Ссылки на страницы
+
+Ссылка на сервер https://akademogog.nomoredomains.club/ (не работает хз почему, все этапы прошли нормально, в том числе и деплой, файлы лежат на сервере, но при попытке зайти отказывает в доступе, судя по логам nginx)
+
+Ссылка на GitHub Pages https://akademogog.github.io/
+
 ## Available Scripts
 
 In the project directory, you can run:

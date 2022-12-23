@@ -208,6 +208,7 @@ const BurgerIngredients = () => {
                         key={ingredientCard._id}
                         ingredientCard={ingredientCard}
                         total={total}
+                        data-testid={ingredientCard.type === 'Булка' ? 'dragableItemBun' : 'dragableItemElse'}
                       />
                     )
                   }

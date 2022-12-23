@@ -10,7 +10,7 @@ type TIngredientCard = {
   total: number;
 }
 
-const IngredientCard: FC<TIngredientCard> = ({ ingredientCard, total }) => {
+const IngredientCard: FC<TIngredientCard> = ({ ingredientCard, total, ...props }) => {
   const location = useLocation();
   const [, dragRef] = useDrag({
     type: "card",
@@ -24,6 +24,7 @@ const IngredientCard: FC<TIngredientCard> = ({ ingredientCard, total }) => {
         pathname: `/ingredients/${ingredientCard._id}`,
         state: { background: location },
       }}
+      {...props}
     >
       <div
       ref={dragRef}

@@ -49,6 +49,7 @@ const MyModal: FC<TMyModal> = ({ children, hideDefaultClose, modalClose, modalGo
           <div
             className={`${styles.closeButton}`}
             onClick={onClose}
+            data-testid="closeModal"
           >
             <CloseIcon type="primary" />
           </div>
